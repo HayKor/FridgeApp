@@ -30,11 +30,12 @@ class AuthInterceptor @Inject constructor(
             try {
                 var accessToken = tokenManager.getAccessToken()
 
-//                // Refresh token if expired
+                // Refresh token if expired
                 if (tokenManager.isAccessTokenExpired() && !tokenManager.isRefreshTokenExpired()) {
                     accessToken = refreshAccessToken()
                 }
 
+                // Logout if both tokens expired
                 if (tokenManager.isAccessTokenExpired() && tokenManager.isRefreshTokenExpired()) {
                     logout()
                     return@runBlocking chain.proceed(request)

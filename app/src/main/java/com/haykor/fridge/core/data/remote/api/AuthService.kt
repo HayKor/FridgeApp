@@ -23,4 +23,3 @@ interface AuthService {
     @POST("auth/logout")
     suspend fun logout()
 }
-
