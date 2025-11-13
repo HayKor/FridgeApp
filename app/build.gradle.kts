@@ -4,6 +4,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.hilt)
+
+    id("kotlin-kapt")
 
     kotlin("plugin.serialization") version "2.2.0"
 }
@@ -55,6 +58,9 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.hilt.android)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.kotlinx.coroutines.android)
+    kapt(libs.hilt.compiler)
 
     // UI
     implementation(platform(libs.androidx.compose.bom))
