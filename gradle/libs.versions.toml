@@ -12,6 +12,7 @@ composeBom = "2025.11.00"
 hiltVersion = "2.57.2"
 retrofit = "3.0.0"
 serializationJson = "1.9.0"
+converterKotlinxSerialization = "latest.version"
 datastorePreferences = "1.1.7"
 kotlinxCoroutinesAndroid = "1.10.2"
 
@@ -35,8 +36,12 @@ hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltV
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hiltVersion" }
 
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serializationJson" }
+converter-kotlinx-serialization = { module = "com.squareup.retrofit2:converter-kotlinx-serialization", version.ref = "converterKotlinxSerialization" }
+
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
 
 [plugins]

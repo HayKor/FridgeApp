@@ -55,12 +55,22 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
 
+    // Network
     implementation(libs.retrofit)
+    implementation(libs.converter.kotlinx.serialization)
+
+    // DI
     implementation(libs.hilt.android)
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.androidx.datastore.preferences)
-    implementation(libs.kotlinx.coroutines.android)
     kapt(libs.hilt.compiler)
+
+    // DataStore
+    implementation(libs.kotlinx.serialization.json)
+
+    // Kotlin Serialization
+    implementation(libs.androidx.datastore.preferences)
+
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.android)
 
     // UI
     implementation(platform(libs.androidx.compose.bom))
