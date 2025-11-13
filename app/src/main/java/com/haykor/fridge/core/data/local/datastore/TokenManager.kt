@@ -24,9 +24,10 @@ class TokenManager @Inject constructor(
     }
 
     suspend fun saveTokens(authResponse: AuthResponse) {
-        val accessTokenExpiryTime = System.currentTimeMillis() + (authResponse.accessTokenExpiresIn)
+        val accessTokenExpiryTime =
+            System.currentTimeMillis() + (authResponse.accessTokenExpiresIn * 60 * 1000)
         val refreshTokenExpiryTime =
-            System.currentTimeMillis() + (authResponse.refreshTokenExpiresIn)
+            System.currentTimeMillis() + (authResponse.refreshTokenExpiresIn * 60 * 1000)
 
         dataStore.edit { preferences ->
             preferences[ACCESS_TOKEN] = authResponse.accessToken

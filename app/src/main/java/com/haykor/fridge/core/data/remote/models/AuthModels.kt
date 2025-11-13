@@ -18,10 +18,10 @@ data class AuthResponse(
     val refreshToken: String,
 
     @SerialName("access_token_expires_in")
-    val accessTokenExpiresIn: Long,
+    val accessTokenExpiresIn: Int, // MINUTES
 
     @SerialName("refresh_token_expires_in")
-    val refreshTokenExpiresIn: Long
+    val refreshTokenExpiresIn: Int // MINUTES
 )
 
 @Serializable
