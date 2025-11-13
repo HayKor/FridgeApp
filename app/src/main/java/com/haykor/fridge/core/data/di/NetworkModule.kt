@@ -1,5 +1,6 @@
 package com.haykor.fridge.core.data.di
 
+import com.haykor.fridge.BuildConfig
 import com.haykor.fridge.core.data.remote.adapters.ResultCallAdapterFactory
 import com.haykor.fridge.core.data.remote.api.AuthService
 import com.haykor.fridge.core.data.remote.interceptors.AuthInterceptor
@@ -46,7 +47,7 @@ object NetworkModule {
             contentType = "application/json; charset=UTF8".toMediaType()
         )
         return Retrofit.Builder()
-            .baseUrl("")
+            .baseUrl(BuildConfig.BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(jsonConverter)
             .addCallAdapterFactory(resultCallAdapterFactory)

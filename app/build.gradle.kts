@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
@@ -10,7 +11,12 @@ plugins {
 
     kotlin("plugin.serialization") version "2.2.0"
 }
-
+val localProperties = Properties().apply {
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        load(localPropertiesFile.inputStream())
+    }
+}
 android {
     namespace = "com.haykor.fridge"
     compileSdk = 36
@@ -26,7 +32,16 @@ android {
     }
 
     buildTypes {
+        debug {
+            val devUrl = localProperties.getProperty("dev.base.url")
+            buildConfigField("String", "BASE_URL", devUrl)
+            buildConfigField("boolean", "IS_DEBUG", "true")
+        }
         release {
+            val prodUrl = localProperties.getProperty("prod.base.url")
+            buildConfigField("String", "BASE_URL", prodUrl)
+            buildConfigField("boolean", "IS_DEBUG", "false")
+
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -40,6 +55,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
