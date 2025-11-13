@@ -16,7 +16,7 @@ interface AuthService {
 
     @POST("auth/refresh_tokens")
     suspend fun refreshTokens(
-        @Header("User-Agent") userAgent: String,
+        @Header("user-agent") userAgent: String,
         @Header("Cookie") refreshToken: String,
     ): Result<AuthResponse>
 
