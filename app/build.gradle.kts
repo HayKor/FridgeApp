@@ -64,10 +64,10 @@ dependencies {
     kapt(libs.hilt.compiler)
 
     // DataStore
-    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.datastore.preferences)
 
     // Kotlin Serialization
-    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.kotlinx.serialization.json)
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
