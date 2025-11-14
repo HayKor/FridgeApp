@@ -5,7 +5,6 @@ import com.haykor.fridge.core.data.local.datastore.TokenManager
 import com.haykor.fridge.core.data.remote.api.AuthService
 import com.haykor.fridge.core.data.remote.models.Result
 import com.haykor.fridge.core.data.remote.util.CookieUtil
-import com.haykor.fridge.core.data.remote.util.UserAgentUtil
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -60,7 +59,6 @@ class AuthInterceptor @Inject constructor(
     private suspend fun refreshAccessToken(): String? {
         val refreshToken = tokenManager.getRefreshToken() ?: return null
         val response = authService.refreshTokens(
-            userAgent = UserAgentUtil.getUserAgent(),
             refreshToken = CookieUtil.createRefreshTokenCookie(refreshToken)
         )
 
