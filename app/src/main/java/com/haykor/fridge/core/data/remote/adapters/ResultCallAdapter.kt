@@ -7,38 +7,32 @@ import retrofit2.Retrofit
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
-class ResultCallAdapter<T>(
-    private val successType: Type
-) : CallAdapter<T, Result<T>> {
-
-    override fun responseType(): Type = successType
-
-    override fun adapt(call: Call<T>): Result<T> {
-        return try {
-            val response = call.execute()
-            if (response.isSuccessful) {
-                Result.Success(response.body()!!)
-            } else {
-                Result.Error("HTTP ${response.code()}")
-            }
-        } catch (e: Exception) {
-            Result.Error(e.message ?: "Unknown error")
-        }
-    }
-}
-
 class ResultCallAdapterFactory : CallAdapter.Factory() {
-
     override fun get(
         returnType: Type,
         annotations: Array<Annotation>,
         retrofit: Retrofit
     ): CallAdapter<*, *>? {
+        val rawReturnType: Class<*> = getRawType(returnType)
+        if (rawReturnType == Call::class.java) {
+            if (returnType is ParameterizedType) {
+                val callInnerType: Type = getParameterUpperBound(0, returnType)
+                if (getRawType(callInnerType) == Result::class.java) {
+                    // resultType is Call<Result<*>> | callInnerType is Result<*>
+                    if (callInnerType is ParameterizedType) {
+                        val resultInnerType = getParameterUpperBound(0, callInnerType)
+                        return ResultCallAdapter<Any?>(resultInnerType)
+                    }
+                    return ResultCallAdapter<Nothing>(Nothing::class.java)
+                }
+            }
+        }
 
-        if (getRawType(returnType) != Result::class.java) return null
-        check(returnType is ParameterizedType) { "Result must be parameterized" }
-
-        val successType = getParameterUpperBound(0, returnType)
-        return ResultCallAdapter<Any>(successType)
+        return null
     }
+}
+
+private class ResultCallAdapter<R>(private val type: Type) : CallAdapter<R, Call<Result<R>>> {
+    override fun responseType() = type
+    override fun adapt(call: Call<R>): Call<Result<R>> = ResultCall(call)
 }
