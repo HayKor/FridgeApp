@@ -14,8 +14,9 @@ fun MainNavHost(
     NavHost(
         navController = navController,
         modifier = modifier,
-        startDestination = Destinations.AUTH
+        startDestination = Destinations.START
     ) {
+        startGraph(navController)
         authGraph(navController)
         homeGraph(navController)
     }
@@ -24,4 +25,5 @@ fun MainNavHost(
 object Destinations {
     const val AUTH = "auth"
     const val HOME = "home"
+    const val START = "start"
 }
