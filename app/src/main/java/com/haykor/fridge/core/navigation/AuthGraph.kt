@@ -9,13 +9,13 @@ import com.haykor.fridge.auth.presentation.screens.login.LoginScreen
 fun NavGraphBuilder.authGraph(navController: NavController) {
     navigation(
         startDestination = AuthScreens.Login.route,
-        route = Destinations.AUTH_GRAPH
+        route = Destinations.AUTH
     ) {
         composable(AuthScreens.Login.route) {
             LoginScreen(
                 onLoginSuccess = {
                     navController.navigate(Destinations.HOME) {
-                        popUpTo(Destinations.LOGIN) { inclusive = true }
+                        popUpTo(AuthScreens.Login.route) { inclusive = true }
                     }
                 },
             )
