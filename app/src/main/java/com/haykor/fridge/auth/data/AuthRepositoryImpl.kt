@@ -5,6 +5,8 @@ import com.haykor.fridge.core.data.remote.api.AuthService
 import com.haykor.fridge.core.data.remote.models.AuthResponse
 import com.haykor.fridge.core.data.remote.models.LoginRequest
 import com.haykor.fridge.core.data.remote.models.Result
+import com.haykor.fridge.core.data.remote.util.BearerUtil
+import com.haykor.fridge.core.data.remote.util.CookieUtil
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
@@ -24,16 +26,18 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun refreshTokens(refreshToken: String): Result<AuthResponse> {
         val refreshToken =
             tokenManager.getRefreshToken() ?: return Result.Error("No refresh token stored")
-        val response = authService.refreshTokens(refreshToken = refreshToken)
+        val response = authService.refreshTokens(
+            refreshToken = CookieUtil.createRefreshTokenCookie(refreshToken)
+        )
         if (response is Result.Success)
             tokenManager.saveTokens(response.data)
         return response
     }
 
     override suspend fun logout() {
-        val refreshToken =
-            tokenManager.getRefreshToken() ?: return
-        authService.logout(refreshToken)
+        val accessToken =
+            tokenManager.getAccessToken() ?: return
+        authService.logout(BearerUtil.createBearerAccessTokenHeader(accessToken))
         tokenManager.clearTokens()
     }
 }

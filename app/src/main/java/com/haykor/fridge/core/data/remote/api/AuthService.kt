@@ -21,6 +21,6 @@ interface AuthService {
 
     @DELETE("auth/logout")
     suspend fun logout(
-        @Header("Cookie") refreshToken: String,
+        @Header("Authorization") accessToken: String,
     )
 }
