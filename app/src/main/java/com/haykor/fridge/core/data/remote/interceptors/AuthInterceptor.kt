@@ -1,20 +1,18 @@
 package com.haykor.fridge.core.data.remote.interceptors
 
-
 import com.haykor.fridge.core.data.local.datastore.TokenManager
 import com.haykor.fridge.core.data.remote.api.AuthService
 import com.haykor.fridge.core.data.remote.models.Result
 import com.haykor.fridge.core.data.remote.util.CookieUtil
+import dagger.Lazy
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class AuthInterceptor @Inject constructor(
     private val tokenManager: TokenManager,
-    private val authService: AuthService
+    private val authService: Lazy<AuthService>
 ) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -58,7 +56,7 @@ class AuthInterceptor @Inject constructor(
 
     private suspend fun refreshAccessToken(): String? {
         val refreshToken = tokenManager.getRefreshToken() ?: return null
-        val response = authService.refreshTokens(
+        val response = authService.get().refreshTokens(
             refreshToken = CookieUtil.createRefreshTokenCookie(refreshToken)
         )
 
