@@ -6,7 +6,6 @@ import com.haykor.fridge.core.data.remote.models.AuthResponse
 import com.haykor.fridge.core.data.remote.models.LoginRequest
 import com.haykor.fridge.core.data.remote.models.Result
 import javax.inject.Inject
-import javax.inject.Singleton
 
 class AuthRepositoryImpl @Inject constructor(
     private val authService: AuthService,
