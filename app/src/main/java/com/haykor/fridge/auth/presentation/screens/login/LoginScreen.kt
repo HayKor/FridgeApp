@@ -1,6 +1,7 @@
 package com.haykor.fridge.auth.presentation.screens.login
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,9 +36,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.haykor.fridge.core.theme.FridgeAppTheme
 
 
 @Composable
@@ -183,16 +186,20 @@ fun LoginFields(
     }
 }
 
-@Preview(showSystemUi = true)
+@PreviewLightDark
 @Composable
 private fun LoginFieldsPreview() {
-    LoginFields(
-        email = "",
-        onEmailChange = {},
-        password = "",
-        onPasswordChange = {},
-        onLoginButtonClick = {},
-        error = "Проверьте правильность почты и пароля",
-        modifier = Modifier.fillMaxSize()
-    )
+    FridgeAppTheme {
+        Surface {
+            LoginFields(
+                email = "pussydestroyer@gmail.com",
+                onEmailChange = {},
+                password = "qwerty",
+                onPasswordChange = {},
+                onLoginButtonClick = {},
+                error = "Проверьте правильность почты и пароля",
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+    }
 }
