@@ -10,4 +10,6 @@ interface AuthRepository {
     suspend fun refreshTokens(refreshToken: String): Result<AuthResponse>
 
     suspend fun logout()
+
+    suspend fun isLoggedIn(): Boolean
 }

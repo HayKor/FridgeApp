@@ -40,4 +40,48 @@ class AuthRepositoryImpl @Inject constructor(
         authService.logout(BearerUtil.createBearerAccessTokenHeader(accessToken))
         tokenManager.clearTokens()
     }
+
+    override suspend fun isLoggedIn(): Boolean {
+        return when {
+            hasValidAccessToken() -> true
+            canRefreshToken() -> refreshAndValidateToken()
+            else -> {
+                tokenManager.clearTokens()
+                false
+            }
+        }
+    }
+
+    private suspend fun hasValidAccessToken(): Boolean {
+        return !tokenManager.isAccessTokenExpired()
+    }
+
+    private suspend fun canRefreshToken(): Boolean {
+        return !tokenManager.isRefreshTokenExpired() &&
+                tokenManager.getRefreshToken() != null
+    }
+
+    private suspend fun refreshAndValidateToken(): Boolean {
+        val refreshToken = tokenManager.getRefreshToken() ?: return false
+
+        return try {
+            val response = refreshTokens(
+                refreshToken = CookieUtil.createRefreshTokenCookie(refreshToken)
+            )
+            when (response) {
+                is Result.Success -> {
+                    tokenManager.saveTokens(response.data)
+                    true
+                }
+
+                is Result.Error -> {
+                    tokenManager.clearTokens()
+                    false
+                }
+            }
+        } catch (e: Exception) {
+            tokenManager.clearTokens()
+            false // Network error or smth
+        }
+    }
 }
