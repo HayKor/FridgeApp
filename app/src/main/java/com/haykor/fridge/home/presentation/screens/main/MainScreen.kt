@@ -12,7 +12,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 
 @Composable
 fun MainScreen(
-    onButtonClick: () -> Unit,
+    onLogout: () -> Unit,
     viewModel: MainScreenViewModel = hiltViewModel()
 ) {
     Column(
@@ -23,7 +23,7 @@ fun MainScreen(
         Button(
             onClick = {
                 viewModel.logout()
-                onButtonClick()
+                onLogout()
             }
         ) {
             Text("Выйти")
