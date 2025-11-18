@@ -1,4 +1,4 @@
-package com.haykor.fridge.ui.theme
+package com.haykor.fridge.core.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

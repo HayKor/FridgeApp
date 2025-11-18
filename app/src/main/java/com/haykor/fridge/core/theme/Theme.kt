@@ -1,6 +1,5 @@
-package com.haykor.fridge.ui.theme
+package com.haykor.fridge.core.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
