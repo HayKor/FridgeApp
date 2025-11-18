@@ -3,6 +3,7 @@ package com.haykor.fridge.auth.data
 import com.haykor.fridge.core.data.local.datastore.TokenManager
 import com.haykor.fridge.core.data.remote.api.AuthService
 import com.haykor.fridge.core.data.remote.models.AuthResponse
+import com.haykor.fridge.core.data.remote.models.CreateUserRequest
 import com.haykor.fridge.core.data.remote.models.LoginRequest
 import com.haykor.fridge.core.data.remote.models.Result
 import com.haykor.fridge.core.data.remote.util.BearerUtil
@@ -32,6 +33,14 @@ class AuthRepositoryImpl @Inject constructor(
         if (response is Result.Success)
             tokenManager.saveTokens(response.data)
         return response
+    }
+
+    override suspend fun register(
+        username: String,
+        email: String,
+        password: String
+    ): Result<Unit> {
+        return authService.createUser(CreateUserRequest(username, email, password))
     }
 
     override suspend fun logout() {
