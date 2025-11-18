@@ -1,6 +1,8 @@
 package com.haykor.fridge.auth.presentation.screens.login
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,23 +19,16 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Key
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,11 +36,11 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.haykor.fridge.core.components.FridgeAppButton
+import com.haykor.fridge.core.components.FridgeAppTextField
 import com.haykor.fridge.core.theme.FridgeAppTheme
 
 
@@ -89,9 +84,17 @@ private fun LoginScreen(
     isLoading: Boolean = false,
     error: String? = null
 ) {
+    val focusManager = LocalFocusManager.current
+    val interactionSource = remember { MutableInteractionSource() }
+
     Scaffold(
         contentWindowInsets = WindowInsets.statusBars,
         modifier = modifier
+            .clickable(
+                onClick = { focusManager.clearFocus() },
+                interactionSource = interactionSource,
+                indication = null
+            )
     ) { innerPadding ->
         Column(
             verticalArrangement = Arrangement.Top,
@@ -150,7 +153,6 @@ fun LoginFields(
     isLoading: Boolean = false,
     error: String? = null
 ) {
-    var isPasswordVisible by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
 
     Column(
@@ -168,7 +170,8 @@ fun LoginFields(
                 style = MaterialTheme.typography.bodyMedium
             )
         }
-        OutlinedTextField(
+        // Email
+        FridgeAppTextField(
             value = email,
             onValueChange = onEmailChange,
             leadingIcon = {
@@ -184,45 +187,20 @@ fun LoginFields(
                     defaultKeyboardAction(ImeAction.Next)
                 }
             ),
-            singleLine = true,
-            maxLines = 1,
             isError = error != null,
-            label = {
-                Text("Почта")
-            },
+            label = "Почта",
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
         )
-        OutlinedTextField(
+        FridgeAppTextField(
             value = password,
             onValueChange = onPasswordChange,
+            isSecret = true,
             leadingIcon = {
                 Icon(Icons.Filled.Key, null)
             },
-            trailingIcon = {
-                IconButton(
-                    onClick = { isPasswordVisible = !isPasswordVisible }
-                ) {
-                    Icon(
-                        imageVector = if (isPasswordVisible) {
-                            Icons.Filled.Visibility
-                        } else {
-                            Icons.Filled.VisibilityOff
-                        },
-                        contentDescription = null
-                    )
-                }
-            },
             isError = error != null,
-            label = {
-                Text("Пароль")
-            },
-            visualTransformation = if (isPasswordVisible) {
-                VisualTransformation.None
-            } else {
-                PasswordVisualTransformation(mask = '*')
-            },
+            label = "Пароль",
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done,
@@ -235,18 +213,15 @@ fun LoginFields(
                         onLoginButtonClick()
                 }
             ),
-            singleLine = true,
-            maxLines = 1,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
         )
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
             modifier = Modifier.fillMaxWidth()
         ) {
-            Button(
+            FridgeAppButton(
                 onClick = onLoginButtonClick,
                 enabled = !isLoading && email.isNotBlank() && password.isNotBlank(),
             ) {
@@ -259,7 +234,7 @@ fun LoginFields(
                     Text("Войти")
                 }
             }
-            Button(
+            FridgeAppButton(
                 onClick = onNavigateRegister,
             ) {
                 Text("Регистрация")
