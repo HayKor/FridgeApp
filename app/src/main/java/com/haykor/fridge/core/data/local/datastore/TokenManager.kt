@@ -27,7 +27,7 @@ class TokenManager @Inject constructor(
         val accessTokenExpiryTime =
             System.currentTimeMillis() + (authResponse.accessTokenExpiresIn * 60 * 1000)
         val refreshTokenExpiryTime =
-            System.currentTimeMillis() + (authResponse.refreshTokenExpiresIn * 60 * 1000)
+            System.currentTimeMillis() + (authResponse.refreshTokenExpiresIn * 24 * 60 * 60 * 1000)
 
         dataStore.edit { preferences ->
             preferences[ACCESS_TOKEN] = authResponse.accessToken
