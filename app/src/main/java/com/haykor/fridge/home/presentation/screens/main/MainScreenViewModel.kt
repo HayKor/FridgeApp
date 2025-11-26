@@ -2,7 +2,7 @@ package com.haykor.fridge.home.presentation.screens.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.haykor.fridge.core.data.remote.models.FridgeProductsFilters
+import com.haykor.fridge.core.data.remote.models.FridgeProductsResponse
 import com.haykor.fridge.core.data.remote.models.Result
 import com.haykor.fridge.home.data.FridgeProductsRepository
 import com.haykor.fridge.home.domain.FridgeProductUi
@@ -21,7 +21,7 @@ class MainScreenViewModel @Inject constructor(
     private val _state = MutableStateFlow(MainScreenState())
     val state = _state.asStateFlow()
 
-    fun onProductNameFilterChange(value: String?) {
+    fun onProductNameFilterChange(value: String) {
         _state.value = _state.value.copy(
             productNameFilter = value
         )
@@ -47,9 +47,11 @@ class MainScreenViewModel @Inject constructor(
             _state.value = _state.value.copy(
                 isLoading = true
             )
-            val response = fridgeProductsRepository.getFridgeProducts(
-                FridgeProductsFilters(productName = _state.value.productNameFilter)
-            )
+//            val response = fridgeProductsRepository.getFridgeProducts(
+//                FridgeProductsFilters(productName = _state.value.productNameFilter)
+//            )
+            val response =
+                Result.Success(data = FridgeProductsResponse(fridgeProductsListStub(), 1, 1))
             when (response) {
                 is Result.Success -> {
                     _state.value = _state.value.copy(
@@ -79,7 +81,7 @@ class MainScreenViewModel @Inject constructor(
 
 data class MainScreenState(
     val items: List<FridgeProductUi> = emptyList(),
-    val productNameFilter: String? = null,
+    val productNameFilter: String = "",
     val filterType: FilterType = FilterType.NAME,
     val isLoading: Boolean = false,
     val error: String? = null
