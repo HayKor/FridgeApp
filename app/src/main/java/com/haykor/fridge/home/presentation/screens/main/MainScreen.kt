@@ -36,9 +36,9 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -75,25 +75,19 @@ fun MainScreen(
     viewModel: MainScreenViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
-    val items = remember { mutableStateListOf<FridgeProductUi>() }
-    items.addAll(fridgeProductsListStub())
 
-//    LaunchedEffect(Unit) {
-//        viewModel.fetchFridgeProducts()
-//    }
+    LaunchedEffect(Unit) {
+        viewModel.fetchFridgeProducts()
+    }
 
     MainScreen(
-        productNameFilter = state.productNameFilter ?: "",
+        productNameFilter = state.productNameFilter,
         onProductNameFilterChange = { viewModel.onProductNameFilterChange(it) },
         selectedFilterType = state.filterType,
         onSelectedFilterTypeChange = { viewModel.onFilterTypeChange(it) },
-//        onFridgeProductDelete = { viewModel.onFridgeProductDelete(it) },
-        onFridgeProductDelete = { product ->
-            items.remove(product)
-        },
+        onFridgeProductDelete = { viewModel.onFridgeProductDelete(it) },
         isLoading = state.isLoading,
-//        items = state.items,
-        items = items
+        items = state.items,
     )
 }
 
@@ -133,6 +127,7 @@ private fun MainScreen(
             } else {
                 FridgeProductsList(
                     items = items,
+                    productNameFilter = productNameFilter,
                     onItemDelete = onFridgeProductDelete
                 )
             }
@@ -206,17 +201,23 @@ fun FridgeProductsFilterSection(
 fun FridgeProductsList(
     items: List<FridgeProductUi>,
     onItemDelete: (FridgeProductUi) -> Unit,
+    productNameFilter: String,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
         contentPadding = PaddingValues(horizontal = 4.dp),
         modifier = modifier
     ) {
-        items(items, key = { it.id }) {
+        items(
+            items = items.filter { productNameFilter.lowercase() in it.name.lowercase() },
+            key = { it.id }
+        ) {
             FridgeProductCard(
                 item = it,
                 onItemDelete = { onItemDelete(it) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .animateItem()
             )
         }
     }
@@ -232,7 +233,7 @@ fun FridgeProductCard(
 ) {
     val density = LocalDensity.current
     val scope = rememberCoroutineScope()
-    val dismissThreshold = 50.dp
+    val dismissThreshold = 100.dp
 
     val offsetX = remember { Animatable(0f) }
 
@@ -330,7 +331,7 @@ fun FridgeProductCard(
 private fun FridgeScreenPreview() {
     FridgeAppTheme {
         MainScreen(
-            items = fridgeProductsListStub(),
+            items = fridgeProductsListStub().map { it.toUi() },
             onProductNameFilterChange = { },
             isLoading = false,
             productNameFilter = "",
@@ -342,7 +343,7 @@ private fun FridgeScreenPreview() {
 }
 
 @OptIn(ExperimentalTime::class)
-private fun fridgeProductsListStub() = listOf(
+internal fun fridgeProductsListStub() = listOf(
     FridgeProductDto(
         id = 1,
         fridgeId = 1,
@@ -361,7 +362,7 @@ private fun fridgeProductsListStub() = listOf(
                 expPeriod = Duration.parse("P3D")
             ),
         ),
-    ).toUi(),
+    ),
 
     FridgeProductDto(
         id = 2,
@@ -381,7 +382,7 @@ private fun fridgeProductsListStub() = listOf(
                 expPeriod = Duration.parse("P3D")
             ),
         ),
-    ).toUi(),
+    ),
 
     FridgeProductDto(
         id = 3,
@@ -401,7 +402,7 @@ private fun fridgeProductsListStub() = listOf(
                 expPeriod = Duration.parse("P3D")
             ),
         ),
-    ).toUi()
+    )
 )
 
 fun AccountType.toMark(): String {
