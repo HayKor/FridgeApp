@@ -2,6 +2,7 @@ package com.haykor.fridge.auth.data
 
 import com.haykor.fridge.core.data.local.datastore.TokenManager
 import com.haykor.fridge.core.data.remote.api.AuthService
+import com.haykor.fridge.core.data.remote.api.UserService
 import com.haykor.fridge.core.data.remote.models.AuthResponse
 import com.haykor.fridge.core.data.remote.models.CreateUserRequest
 import com.haykor.fridge.core.data.remote.models.LoginRequest
@@ -12,6 +13,7 @@ import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val authService: AuthService,
+    private val userService: UserService,
     private val tokenManager: TokenManager
 ) : AuthRepository {
     override suspend fun login(
@@ -40,7 +42,7 @@ class AuthRepositoryImpl @Inject constructor(
         email: String,
         password: String
     ): Result<Unit> {
-        return authService.createUser(CreateUserRequest(username, email, password))
+        return userService.createUser(CreateUserRequest(username, email, password))
     }
 
     override suspend fun logout() {

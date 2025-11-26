@@ -4,19 +4,25 @@ import com.haykor.fridge.BuildConfig
 import com.haykor.fridge.core.data.local.datastore.TokenManager
 import com.haykor.fridge.core.data.remote.adapters.ResultCallAdapterFactory
 import com.haykor.fridge.core.data.remote.api.AuthService
+import com.haykor.fridge.core.data.remote.api.FridgeProductsService
+import com.haykor.fridge.core.data.remote.api.UserService
 import com.haykor.fridge.core.data.remote.interceptors.AuthInterceptor
 import com.haykor.fridge.core.data.remote.interceptors.UserAgentInterceptor
+import com.haykor.fridge.core.data.remote.util.InstantSerializer
 import dagger.Lazy
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.contextual
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import javax.inject.Singleton
+import kotlin.time.ExperimentalTime
 
 
 @Module
@@ -25,8 +31,20 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    fun provideFridgeProductsService(retrofit: Retrofit): FridgeProductsService {
+        return retrofit.create(FridgeProductsService::class.java)
+    }
+
+    @Provides
+    @Singleton
     fun provideAuthService(retrofit: Retrofit): AuthService {
         return retrofit.create(AuthService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserService(retrofit: Retrofit): UserService {
+        return retrofit.create(UserService::class.java)
     }
 
     @Provides
@@ -59,11 +77,16 @@ object NetworkModule {
             .build()
     }
 
+    @OptIn(ExperimentalTime::class)
     @Provides
     @Singleton
     fun provideJson(): Json {
+        val module = SerializersModule {
+            contextual(InstantSerializer)
+        }
         return Json {
             ignoreUnknownKeys = true
+            serializersModule = module
             // isLenient = true
         }
     }

@@ -36,7 +36,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.haykor.fridge.core.components.FridgeAppButton
@@ -243,7 +243,10 @@ fun LoginFields(
     }
 }
 
-@PreviewLightDark
+@Preview(
+    device = "spec:parent=pixel_6,navigation=buttons",
+    showSystemUi = true
+)
 @Composable
 private fun LoginFieldsPreview() {
     FridgeAppTheme {

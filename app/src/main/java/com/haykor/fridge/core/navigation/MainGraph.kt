@@ -12,13 +12,7 @@ fun NavGraphBuilder.homeGraph(navController: NavController) {
         route = Destinations.HOME
     ) {
         composable(HomeScreens.Main.route) {
-            MainScreen(
-                onLogout = {
-                    navController.navigate(Destinations.AUTH) {
-                        popUpTo(HomeScreens.Main.route) { inclusive = true }
-                    }
-                }
-            )
+            MainScreen()
         }
     }
 }
