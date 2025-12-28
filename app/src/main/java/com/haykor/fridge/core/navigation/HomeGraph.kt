@@ -1,5 +1,8 @@
 package com.haykor.fridge.core.navigation
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -12,7 +15,13 @@ fun NavGraphBuilder.homeGraph(navController: NavController) {
         startDestination = HomeScreens.Main,
     ) {
         composable<HomeScreens.Main> {
-            MainScreen()
+            Scaffold(
+                bottomBar = {
+                    BottomNavBar(navController)
+                }
+            ) { paddingValues ->
+                MainScreen(modifier = Modifier.padding(paddingValues))
+            }
         }
     }
 }
