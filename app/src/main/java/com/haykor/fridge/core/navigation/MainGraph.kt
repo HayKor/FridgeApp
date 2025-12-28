@@ -5,18 +5,19 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.haykor.fridge.home.presentation.screens.main.MainScreen
+import kotlinx.serialization.Serializable
 
 fun NavGraphBuilder.homeGraph(navController: NavController) {
-    navigation(
-        startDestination = HomeScreens.Main.route,
-        route = Destinations.HOME
+    navigation<Destinations.Home>(
+        startDestination = HomeScreens.Main,
     ) {
-        composable(HomeScreens.Main.route) {
+        composable<HomeScreens.Main> {
             MainScreen()
         }
     }
 }
 
-sealed class HomeScreens(val route: String) {
-    object Main : HomeScreens("main")
+sealed class HomeScreens() {
+    @Serializable
+    object Main : HomeScreens()
 }

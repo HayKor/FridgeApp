@@ -6,27 +6,27 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.haykor.fridge.auth.presentation.screens.login.LoginScreen
 import com.haykor.fridge.auth.presentation.screens.registration.RegistrationScreen
+import kotlinx.serialization.Serializable
 
 fun NavGraphBuilder.authGraph(navController: NavController) {
-    navigation(
-        startDestination = AuthScreens.Login.route,
-        route = Destinations.AUTH
+    navigation<Destinations.Auth>(
+        startDestination = AuthScreens.Login,
     ) {
-        composable(AuthScreens.Login.route) {
+        composable<AuthScreens.Login> {
             LoginScreen(
                 onNavigateRegister = {
-                    navController.navigate(AuthScreens.Register.route) {
-                        popUpTo(AuthScreens.Login.route)
+                    navController.navigate(AuthScreens.Register) {
+                        popUpTo(AuthScreens.Login)
                     }
                 },
                 onLoginSuccess = {
-                    navController.navigate(Destinations.HOME) {
-                        popUpTo(AuthScreens.Login.route) { inclusive = true }
+                    navController.navigate(Destinations.Home) {
+                        popUpTo(AuthScreens.Login) { inclusive = true }
                     }
                 },
             )
         }
-        composable(AuthScreens.Register.route) {
+        composable<AuthScreens.Register> {
             RegistrationScreen(
                 onNavigateLogin = {
                     navController.popBackStack()
@@ -39,7 +39,10 @@ fun NavGraphBuilder.authGraph(navController: NavController) {
     }
 }
 
-sealed class AuthScreens(val route: String) {
-    object Login : AuthScreens("login")
-    object Register : AuthScreens("register")
+sealed class AuthScreens() {
+    @Serializable
+    object Login : AuthScreens()
+
+    @Serializable
+    object Register : AuthScreens()
 }
