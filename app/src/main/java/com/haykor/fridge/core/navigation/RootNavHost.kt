@@ -1,34 +1,26 @@
 package com.haykor.fridge.core.navigation
 
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.haykor.fridge.home.presentation.screens.main.MainScreen
-import kotlinx.serialization.Serializable
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeNavHost(
+fun RootNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
     NavHost(
         navController = navController,
-        startDestination = HomeScreens.Main,
-        modifier = modifier
+        modifier = modifier,
+        startDestination = Destinations.Start
     ) {
-        composable<HomeScreens.Main> {
-            MainScreen()
+        startGraph(navController)
+        authGraph(navController)
+        composable<Destinations.Main> {
+            MainNavHost()
         }
     }
-}
-
-sealed class HomeScreens() {
-    @Serializable
-    object Main : HomeScreens()
 }

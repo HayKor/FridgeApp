@@ -20,7 +20,7 @@ fun NavGraphBuilder.authGraph(navController: NavController) {
                     }
                 },
                 onLoginSuccess = {
-                    navController.navigate(Destinations.Home) {
+                    navController.navigate(Destinations.Main) {
                         popUpTo(AuthScreens.Login) { inclusive = true }
                     }
                 },

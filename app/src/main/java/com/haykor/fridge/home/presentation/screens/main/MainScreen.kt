@@ -33,7 +33,7 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -72,6 +72,7 @@ import kotlin.time.Instant
 
 @Composable
 fun MainScreen(
+    modifier: Modifier = Modifier,
     viewModel: MainScreenViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
@@ -88,6 +89,7 @@ fun MainScreen(
         onFridgeProductDelete = { viewModel.onFridgeProductDelete(it) },
         isLoading = state.isLoading,
         items = state.items,
+        modifier = modifier
     )
 }
 
@@ -101,14 +103,15 @@ private fun MainScreen(
     onFridgeProductDelete: (FridgeProductUi) -> Unit,
     isLoading: Boolean,
     items: List<FridgeProductUi>,
+    modifier: Modifier = Modifier
 ) {
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+    Surface(
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
+        modifier = modifier
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it)
         ) {
             FridgeProductsFilterSection(
                 productNameFilter = productNameFilter,
@@ -269,14 +272,16 @@ fun FridgeProductCard(
                     orientation = Orientation.Horizontal,
                     state = rememberDraggableState { delta ->
                         scope.launch {
-                            offsetX.snapTo(offsetX.value + delta / density.density)
+                            val targetValue =
+                                (offsetX.value + delta / density.density).coerceAtMost(0f)
+                            offsetX.snapTo(targetValue)
                         }
                     },
                     onDragStopped = { velocity ->
                         if (abs(offsetX.value) > with(density) { dismissThreshold.toPx() }) {
                             scope.launch {
                                 offsetX.animateTo(
-                                    targetValue = if (offsetX.value > 0) 2000f else -2000f,
+                                    targetValue = -2000f,
                                     animationSpec = tween(300)
                                 )
                                 onItemDelete()
@@ -405,7 +410,7 @@ internal fun fridgeProductsListStub() = listOf(
     )
 )
 
-fun AccountType.toMark(): String {
+private fun AccountType.toMark(): String {
     return when (this) {
         AccountType.WEIGHT -> "кг"
         AccountType.VOLUME -> "л"

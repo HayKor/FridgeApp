@@ -15,7 +15,7 @@ fun NavGraphBuilder.startGraph(navController: NavController) {
             SplashScreen(
                 onCheckAuthComplete = { isLoggedIn ->
                     if (isLoggedIn) {
-                        navController.navigate(Destinations.Home) {
+                        navController.navigate(Destinations.Main) {
                             popUpTo(Destinations.Start) { inclusive = true }
                         }
                     } else {

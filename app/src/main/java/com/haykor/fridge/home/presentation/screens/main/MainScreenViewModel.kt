@@ -35,6 +35,7 @@ class MainScreenViewModel @Inject constructor(
     }
 
     fun onFridgeProductDelete(item: FridgeProductUi) {
+        // TODO: implement logic on deleting with API
         viewModelScope.launch {
             _state.value = _state.value.copy(
                 items = _state.value.items.filter { it != item }
@@ -47,9 +48,9 @@ class MainScreenViewModel @Inject constructor(
             _state.value = _state.value.copy(
                 isLoading = true
             )
-//            val response = fridgeProductsRepository.getFridgeProducts(
-//                FridgeProductsFilters(productName = _state.value.productNameFilter)
-//            )
+//            val response = fridgeProductsRepository.getFridgeProducts(FridgeProductsFilters())
+
+//             Stub
             val response =
                 Result.Success(data = FridgeProductsResponse(fridgeProductsListStub(), 1, 1))
             when (response) {
