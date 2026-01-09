@@ -103,6 +103,8 @@ dependencies {
 
     implementation(libs.androidx.compose.material.icons.extended)
 
+    implementation(libs.kotlinx.datetime)
+
     // Test and debugging
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

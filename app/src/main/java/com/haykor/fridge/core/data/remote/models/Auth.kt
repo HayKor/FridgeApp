@@ -23,13 +23,3 @@ data class AuthResponse(
     @SerialName("refresh_token_expires_in")
     val refreshTokenExpiresIn: Int // MINUTES
 )
-
-@Serializable
-data class ApiError(
-    val detail: List<ErrorDetail>
-)
-
-@Serializable
-data class ErrorDetail(
-    val msg: String
-)

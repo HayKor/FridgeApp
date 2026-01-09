@@ -1,7 +1,5 @@
 package com.haykor.fridge.core.components
 
-import android.R.attr.maxLines
-import android.R.attr.textStyle
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -16,7 +14,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,7 +34,9 @@ fun FridgeAppTextField(
     modifier: Modifier = Modifier,
     isSecret: Boolean = false,
     isError: Boolean = false,
+    readOnly: Boolean = false,
     leadingIcon: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default
 ) {
@@ -54,7 +53,6 @@ fun FridgeAppTextField(
         } else {
             PasswordVisualTransformation(mask = '*')
         },
-        leadingIcon = leadingIcon,
         trailingIcon = {
             if (isSecret) {
                 IconButton(
@@ -69,8 +67,10 @@ fun FridgeAppTextField(
                         contentDescription = null
                     )
                 }
-            }
+            } else trailingIcon
         },
+        leadingIcon = leadingIcon,
+        readOnly = readOnly,
         colors = OutlinedTextFieldDefaults.colors(
             focusedContainerColor = Color.Transparent,
             unfocusedContainerColor = MaterialTheme.colorScheme.surface,
