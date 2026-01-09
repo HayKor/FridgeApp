@@ -1,27 +1,36 @@
 package com.haykor.fridge.core.navigation
 
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navigation
+import androidx.navigation.compose.rememberNavController
 import com.haykor.fridge.auth.presentation.screens.login.LoginScreen
 import com.haykor.fridge.auth.presentation.screens.registration.RegistrationScreen
 import kotlinx.serialization.Serializable
 
-fun NavGraphBuilder.authGraph(navController: NavController) {
-    navigation<Destinations.Auth>(
+@Composable
+fun AuthNavHost(
+    modifier: Modifier = Modifier,
+    rootNavController: NavHostController
+) {
+    val authNavController = rememberNavController()
+    NavHost(
+        navController = authNavController,
         startDestination = AuthScreens.Login,
+        modifier = modifier
     ) {
         composable<AuthScreens.Login> {
             LoginScreen(
                 onNavigateRegister = {
-                    navController.navigate(AuthScreens.Register) {
+                    authNavController.navigate(AuthScreens.Register) {
                         popUpTo(AuthScreens.Login)
                     }
                 },
                 onLoginSuccess = {
-                    navController.navigate(Destinations.Main) {
-                        popUpTo(AuthScreens.Login) { inclusive = true }
+                    rootNavController.navigate(Destinations.Main) {
+                        popUpTo(Destinations.Auth) { inclusive = true }
                     }
                 },
             )
@@ -29,15 +38,16 @@ fun NavGraphBuilder.authGraph(navController: NavController) {
         composable<AuthScreens.Register> {
             RegistrationScreen(
                 onNavigateLogin = {
-                    navController.popBackStack()
+                    authNavController.popBackStack()
                 },
                 onRegistrationSuccess = {
-                    navController.popBackStack()
+                    authNavController.popBackStack()
                 }
             )
         }
     }
 }
+
 
 sealed class AuthScreens() {
     @Serializable

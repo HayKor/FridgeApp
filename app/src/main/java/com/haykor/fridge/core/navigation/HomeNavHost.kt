@@ -1,6 +1,5 @@
 package com.haykor.fridge.core.navigation
 
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -10,15 +9,14 @@ import androidx.navigation.compose.rememberNavController
 import com.haykor.fridge.home.presentation.screens.main.MainScreen
 import kotlinx.serialization.Serializable
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeNavHost(
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController()
+    mainNavController: NavHostController
 ) {
+    val homeNavController = rememberNavController()
     NavHost(
-        navController = navController,
+        navController = homeNavController,
         startDestination = HomeScreens.Main,
         modifier = modifier
     ) {
