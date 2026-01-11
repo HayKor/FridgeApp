@@ -35,15 +35,13 @@ fun BottomNavBar(
                 icon = { Icon(painterResource(route.icon), route.label) },
                 label = { Text(route.label) },
                 onClick = {
-                    if (!selected) {
-                        navController.navigate(route.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
-                            }
-                            // Avoid duplicates
-                            launchSingleTop = true
-                            restoreState = true
+                    navController.navigate(route.route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
                         }
+                        // Avoid duplicates
+                        launchSingleTop = true
+                        restoreState = true
                     }
                 }
             )
