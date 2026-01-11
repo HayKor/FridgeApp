@@ -28,6 +28,9 @@ fun MainNavHost(
             composable<MainScreens.Home> {
                 HomeNavHost(mainNavController = mainNavController)
             }
+            composable<MainScreens.Fridges> {
+                FridgesNavHost(mainNavController = mainNavController)
+            }
         }
     }
 }
@@ -35,4 +38,7 @@ fun MainNavHost(
 sealed class MainScreens() {
     @Serializable
     object Home : MainScreens()
+
+    @Serializable
+    object Fridges : MainScreens()
 }

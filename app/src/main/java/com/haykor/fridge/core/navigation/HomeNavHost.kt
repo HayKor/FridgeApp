@@ -6,7 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.haykor.fridge.home.presentation.screens.main.MainScreen
+import com.haykor.fridge.feature.home.presentation.screens.main.MainScreen
 import kotlinx.serialization.Serializable
 
 @Composable
