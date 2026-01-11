@@ -76,10 +76,6 @@ fun MainScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
-//    LaunchedEffect(Unit) {
-//        viewModel.fetchFridgeProducts()
-//    }
-
     MainScreen(
         productNameFilter = state.productNameFilter,
         onProductNameFilterChange = { viewModel.onProductNameFilterChange(it) },

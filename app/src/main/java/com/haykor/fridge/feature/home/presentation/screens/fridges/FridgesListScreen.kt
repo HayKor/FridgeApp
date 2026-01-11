@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
@@ -33,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.haykor.fridge.R
+import com.haykor.fridge.core.components.FridgeAppSwipeableCard
 import com.haykor.fridge.core.theme.FridgeAppTheme
 import com.haykor.fridge.feature.home.domain.FridgesUi
 
@@ -56,6 +56,7 @@ fun FridgesListScreen(
     ) { paddingValues ->
         FridgesListScreen(
             state = state,
+            onFridgeDelete = viewModel::onFridgeDelete,
             modifier = modifier
                 .padding(paddingValues)
                 .fillMaxSize()
@@ -66,6 +67,7 @@ fun FridgesListScreen(
 @Composable
 private fun FridgesListScreen(
     state: FridgesListState,
+    onFridgeDelete: (FridgesUi) -> Unit,
     modifier: Modifier = Modifier
 ) {
     when (state) {
@@ -78,6 +80,7 @@ private fun FridgesListScreen(
         is FridgesListState.Displaying -> {
             FridgesListDisplaying(
                 fridgesList = state.fridgesList,
+                onFridgeDelete = onFridgeDelete,
                 modifier = modifier.fillMaxSize()
             )
         }
@@ -91,7 +94,7 @@ private fun FridgesListScreen(
         is FridgesListState.Error -> {
             val context = LocalContext.current
             LaunchedEffect(Unit) {
-                Toast.makeText(context, "Произошла ошибка.", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, state.msg, Toast.LENGTH_LONG).show()
             }
             FridgesListDisplayingEmpty(
                 modifier = modifier.fillMaxSize()
@@ -122,6 +125,7 @@ private fun FridgesListDisplayingEmpty(
 @Composable
 private fun FridgesListDisplaying(
     fridgesList: List<FridgesUi>,
+    onFridgeDelete: (FridgesUi) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -131,10 +135,11 @@ private fun FridgesListDisplaying(
         LazyColumn(
             contentPadding = PaddingValues(horizontal = 4.dp)
         ) {
-            items(fridgesList) { fridge ->
+            items(fridgesList, key = { it.id }) { fridge ->
                 FridgesCard(
                     fridge = fridge,
-                    modifier = Modifier.fillMaxWidth()
+                    onFridgeDelete = { onFridgeDelete(fridge) },
+                    modifier = Modifier.fillMaxWidth().animateItem()
                 )
             }
         }
@@ -144,14 +149,16 @@ private fun FridgesListDisplaying(
 @Composable
 private fun FridgesCard(
     fridge: FridgesUi,
+    onFridgeDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Card(
+    FridgeAppSwipeableCard(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer
         ),
         modifier = modifier
-            .padding(2.dp)
+            .padding(2.dp),
+        onItemDelete = onFridgeDelete,
     ) {
         Box(
             contentAlignment = Alignment.Center,
@@ -197,9 +204,10 @@ private fun FridgesListDisplayingPreview() {
             state = FridgesListState.Displaying(
                 fridgesList = listOf(
                     FridgesUi(id = 1, name = "Мой холодильник №1"),
-                    FridgesUi(id = 1, name = "Мой холодильник №2")
+                    FridgesUi(id = 2, name = "Мой холодильник №2")
                 )
             ),
+            onFridgeDelete = {},
             modifier = Modifier.fillMaxSize()
         )
     }

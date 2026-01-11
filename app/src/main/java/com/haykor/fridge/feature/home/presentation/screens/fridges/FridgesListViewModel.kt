@@ -10,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,14 +26,24 @@ class FridgesListViewModel @Inject constructor(
         fetch()
     }
 
+    fun onFridgeDelete(fridge: FridgesUi) {
+        viewModelScope.launch {
+            // TODO: implement API logic
+            _state.update {
+                FridgesListState.Displaying(
+                    fridgesList = (_state.value as FridgesListState.Displaying).fridgesList.filter { it != fridge }
+                )
+            }
+        }
+    }
+
     fun fetch() {
         viewModelScope.launch {
             _state.value = FridgesListState.Loading
 
-            delay(3000L)
+            delay(1000L) // imitate work
 
-            val result = fridgesRepository.getFridges()
-            when (result) {
+            when (val result = fridgesRepository.getFridges()) {
                 is Result.Error -> {
                     _state.value = FridgesListState.Error("Что-то пошло не так")
                 }
