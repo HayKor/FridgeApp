@@ -1,5 +1,6 @@
 package com.haykor.fridge.feature.auth.data
 
+import android.util.Log
 import com.haykor.fridge.core.data.local.datastore.TokenManager
 import com.haykor.fridge.core.data.remote.api.AuthService
 import com.haykor.fridge.core.data.remote.api.UserService
@@ -64,10 +65,17 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     private suspend fun hasValidAccessToken(): Boolean {
+        Log.d("tokens", "isAccessTokenExpired ${!tokenManager.isAccessTokenExpired()}")
         return !tokenManager.isAccessTokenExpired()
     }
 
     private suspend fun canRefreshToken(): Boolean {
+        Log.d(
+            "tokens", "canRefreshToken ${
+                !tokenManager.isRefreshTokenExpired() &&
+                        tokenManager.getRefreshToken() != null
+            }"
+        )
         return !tokenManager.isRefreshTokenExpired() &&
                 tokenManager.getRefreshToken() != null
     }
@@ -79,19 +87,21 @@ class AuthRepositoryImpl @Inject constructor(
             val response = refreshTokens(
                 refreshToken = CookieUtil.createRefreshTokenCookie(refreshToken)
             )
+            Log.d("tokens", "$response")
             when (response) {
                 is Result.Success -> {
-                    tokenManager.saveTokens(response.data)
                     true
                 }
 
                 is Result.Error -> {
                     tokenManager.clearTokens()
+                    Log.d("tokens", "exception msg ${response.msg}")
                     false
                 }
             }
         } catch (e: Exception) {
             tokenManager.clearTokens()
+            Log.d("tokens", "exception $e")
             false // Network error or smth
         }
     }
