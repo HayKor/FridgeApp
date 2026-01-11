@@ -3,6 +3,8 @@ package com.haykor.fridge.feature.start.presentation.screens.splash
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -30,10 +32,14 @@ fun SplashScreen(
             is AuthState.Unauthenticated -> onCheckAuthComplete(false)
         }
     }
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize()
+    Surface(
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
     ) {
-        CircularProgressIndicator()
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            CircularProgressIndicator()
+        }
     }
 }
