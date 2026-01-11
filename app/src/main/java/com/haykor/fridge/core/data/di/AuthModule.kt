@@ -1,7 +1,7 @@
 package com.haykor.fridge.core.data.di
 
-import com.haykor.fridge.auth.data.AuthRepository
-import com.haykor.fridge.auth.data.AuthRepositoryImpl
+import com.haykor.fridge.feature.auth.data.AuthRepository
+import com.haykor.fridge.feature.auth.data.AuthRepositoryImpl
 import com.haykor.fridge.core.data.local.datastore.TokenManager
 import com.haykor.fridge.core.data.remote.api.AuthService
 import com.haykor.fridge.core.data.remote.api.UserService

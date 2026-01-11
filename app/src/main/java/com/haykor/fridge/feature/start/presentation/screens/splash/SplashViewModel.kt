@@ -1,8 +1,8 @@
-package com.haykor.fridge.start.presentation.screens.splash
+package com.haykor.fridge.feature.start.presentation.screens.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.haykor.fridge.auth.data.AuthRepository
+import com.haykor.fridge.feature.auth.data.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

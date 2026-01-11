@@ -1,8 +1,8 @@
-package com.haykor.fridge.auth.presentation.screens.login
+package com.haykor.fridge.feature.auth.presentation.screens.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.haykor.fridge.auth.data.AuthRepository
+import com.haykor.fridge.feature.auth.data.AuthRepository
 import com.haykor.fridge.core.data.remote.models.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow

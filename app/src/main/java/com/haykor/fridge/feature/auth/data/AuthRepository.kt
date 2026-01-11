@@ -1,4 +1,4 @@
-package com.haykor.fridge.auth.data
+package com.haykor.fridge.feature.auth.data
 
 import com.haykor.fridge.core.data.remote.models.AuthResponse
 import com.haykor.fridge.core.data.remote.models.Result

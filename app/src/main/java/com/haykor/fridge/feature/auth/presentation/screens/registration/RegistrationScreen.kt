@@ -1,4 +1,4 @@
-package com.haykor.fridge.auth.presentation.screens.login
+package com.haykor.fridge.feature.auth.presentation.screens.registration
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,6 +19,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Key
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -36,50 +37,58 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.haykor.fridge.core.components.FridgeAppButton
 import com.haykor.fridge.core.components.FridgeAppTextField
 import com.haykor.fridge.core.theme.FridgeAppTheme
 
-
 @Composable
-fun LoginScreen(
-    onLoginSuccess: () -> Unit,
-    onNavigateRegister: () -> Unit,
-    viewModel: LoginViewModel = hiltViewModel(),
+fun RegistrationScreen(
+    onRegistrationSuccess: () -> Unit,
+    onNavigateLogin: () -> Unit,
+    viewModel: RegistrationViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
 
     LaunchedEffect(viewModel) {
         viewModel.events.collect { event ->
             when (event) {
-                is LoginEvent.LoginSuccess -> onLoginSuccess()
+                is RegistrationEvent.RegistrationSuccess -> onRegistrationSuccess()
             }
         }
     }
-    LoginScreen(
+
+    RegistrationScreen(
+        username = state.username,
+        onUsernameChange = { viewModel.onUsernameChange(it) },
         email = state.email,
         onEmailChange = { viewModel.onEmailChange(it) },
         password = state.password,
         onPasswordChange = { viewModel.onPasswordChange(it) },
-        onLoginButtonClick = { viewModel.login() },
-        onNavigateRegister = { onNavigateRegister() },
+        passwordRepeat = state.passwordRepeat,
+        onPasswordRepeatChange = { viewModel.onPasswordRepeatChange(it) },
+        onRegisterButtonClick = { viewModel.register() },
+        onNavigateLogin = { onNavigateLogin() },
         isLoading = state.isLoading,
         error = state.error,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
     )
 }
 
 @Composable
-private fun LoginScreen(
+private fun RegistrationScreen(
+    username: String,
+    onUsernameChange: (String) -> Unit,
     email: String,
     onEmailChange: (String) -> Unit,
     password: String,
     onPasswordChange: (String) -> Unit,
-    onLoginButtonClick: () -> Unit,
-    onNavigateRegister: () -> Unit,
+    passwordRepeat: String,
+    onPasswordRepeatChange: (String) -> Unit,
+    onRegisterButtonClick: () -> Unit,
+    onNavigateLogin: () -> Unit,
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
     error: String? = null
@@ -121,17 +130,21 @@ private fun LoginScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text(
-                        text = "Вход",
+                        text = "Регистрация",
                         style = MaterialTheme.typography.headlineMedium,
                         modifier = Modifier.padding(bottom = 32.dp)
                     )
-                    LoginFields(
+                    RegistrationFields(
+                        username = username,
+                        onUsernameChange = { onUsernameChange(it) },
                         email = email,
                         onEmailChange = { onEmailChange(it) },
                         password = password,
                         onPasswordChange = { onPasswordChange(it) },
-                        onLoginButtonClick = onLoginButtonClick,
-                        onNavigateRegister = onNavigateRegister,
+                        passwordRepeat = passwordRepeat,
+                        onPasswordRepeatChange = { onPasswordRepeatChange(it) },
+                        onRegisterButtonClick = onRegisterButtonClick,
+                        onNavigateLogin = onNavigateLogin,
                         isLoading = isLoading,
                         error = error,
                     )
@@ -142,13 +155,17 @@ private fun LoginScreen(
 }
 
 @Composable
-fun LoginFields(
+fun RegistrationFields(
+    username: String,
+    onUsernameChange: (String) -> Unit,
     email: String,
     onEmailChange: (String) -> Unit,
     password: String,
     onPasswordChange: (String) -> Unit,
-    onLoginButtonClick: () -> Unit,
-    onNavigateRegister: () -> Unit,
+    passwordRepeat: String,
+    onPasswordRepeatChange: (String) -> Unit,
+    onRegisterButtonClick: () -> Unit,
+    onNavigateLogin: () -> Unit,
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
     error: String? = null
@@ -170,6 +187,28 @@ fun LoginFields(
                 style = MaterialTheme.typography.bodyMedium
             )
         }
+        // Username
+        FridgeAppTextField(
+            value = username,
+            onValueChange = onUsernameChange,
+            leadingIcon = {
+                Icon(Icons.Filled.Person, null)
+            },
+            keyboardOptions = KeyboardOptions(
+                autoCorrectEnabled = false,
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = {
+                    defaultKeyboardAction(ImeAction.Next)
+                }
+            ),
+            isError = error != null,
+            label = "Имя пользователя",
+            modifier = Modifier
+                .fillMaxWidth()
+        )
         // Email
         FridgeAppTextField(
             value = email,
@@ -192,6 +231,7 @@ fun LoginFields(
             modifier = Modifier
                 .fillMaxWidth()
         )
+        // Password
         FridgeAppTextField(
             value = password,
             onValueChange = onPasswordChange,
@@ -199,8 +239,31 @@ fun LoginFields(
             leadingIcon = {
                 Icon(Icons.Filled.Key, null)
             },
-            isError = error != null,
+            isError = (error != null) || (password.isNotBlank() && password != passwordRepeat),
             label = "Пароль",
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Next,
+                autoCorrectEnabled = false
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = {
+                    defaultKeyboardAction(ImeAction.Next)
+                }
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+        // Password repeat
+        FridgeAppTextField(
+            value = passwordRepeat,
+            onValueChange = onPasswordRepeatChange,
+            isSecret = true,
+            leadingIcon = {
+                Icon(Icons.Filled.Key, null)
+            },
+            isError = (error != null) || (password.isNotBlank() && password != passwordRepeat),
+            label = "Повторите пароль",
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done,
@@ -209,8 +272,9 @@ fun LoginFields(
             keyboardActions = KeyboardActions(
                 onDone = {
                     focusManager.clearFocus()
-                    if (!isLoading && email.isNotBlank() && password.isNotBlank())
-                        onLoginButtonClick()
+                    if (!isLoading && email.isNotBlank() && password.isNotBlank() && password == passwordRepeat) {
+                        onRegisterButtonClick()
+                    }
                 }
             ),
             modifier = Modifier
@@ -222,8 +286,13 @@ fun LoginFields(
             modifier = Modifier.fillMaxWidth()
         ) {
             FridgeAppButton(
-                onClick = onLoginButtonClick,
-                enabled = !isLoading && email.isNotBlank() && password.isNotBlank(),
+                onClick = onNavigateLogin,
+            ) {
+                Text("Вход")
+            }
+            FridgeAppButton(
+                onClick = onRegisterButtonClick,
+                enabled = !isLoading && email.isNotBlank() && password.isNotBlank() && password == passwordRepeat,
             ) {
                 if (isLoading) {
                     CircularProgressIndicator(
@@ -231,35 +300,29 @@ fun LoginFields(
                         strokeWidth = 2.dp
                     )
                 } else {
-                    Text("Войти")
+                    Text("Регистрация")
                 }
-            }
-            FridgeAppButton(
-                onClick = onNavigateRegister,
-            ) {
-                Text("Регистрация")
             }
         }
     }
 }
 
-@Preview(
-    device = "spec:parent=pixel_6,navigation=buttons",
-    showSystemUi = true
-)
+@PreviewLightDark
 @Composable
-private fun LoginFieldsPreview() {
+private fun RegistrationFieldsPreview() {
     FridgeAppTheme {
-        LoginScreen(
+        RegistrationScreen(
             email = "pussydestroyer@gmail.com",
+            username = "HayKor",
+            onUsernameChange = {},
             onEmailChange = {},
-            password = "qewrty",
+            password = "qwerty",
             onPasswordChange = {},
-            onLoginButtonClick = {},
-            onNavigateRegister = {},
-            modifier = Modifier.fillMaxSize(),
-            isLoading = false,
-            error = null,
+            passwordRepeat = "qwert",
+            onPasswordRepeatChange = {},
+            onRegisterButtonClick = {},
+            onNavigateLogin = {},
+            modifier = Modifier.fillMaxSize()
         )
     }
 }
