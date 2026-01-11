@@ -1,4 +1,4 @@
-package com.haykor.fridge.home.presentation.screens.main
+package com.haykor.fridge.feature.home.presentation.screens.main
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
@@ -36,7 +36,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -59,8 +58,8 @@ import com.haykor.fridge.core.data.remote.models.FridgeProductDto
 import com.haykor.fridge.core.data.remote.models.ProductDto
 import com.haykor.fridge.core.data.remote.models.ProductTypeDto
 import com.haykor.fridge.core.theme.FridgeAppTheme
-import com.haykor.fridge.home.domain.FridgeProductUi
-import com.haykor.fridge.home.domain.toUi
+import com.haykor.fridge.feature.home.domain.FridgeProductUi
+import com.haykor.fridge.feature.home.domain.toUi
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.roundToInt
@@ -77,9 +76,9 @@ fun MainScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
-    LaunchedEffect(Unit) {
-        viewModel.fetchFridgeProducts()
-    }
+//    LaunchedEffect(Unit) {
+//        viewModel.fetchFridgeProducts()
+//    }
 
     MainScreen(
         productNameFilter = state.productNameFilter,

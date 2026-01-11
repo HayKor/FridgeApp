@@ -1,4 +1,4 @@
-package com.haykor.fridge.home.domain
+package com.haykor.fridge.feature.home.domain
 
 import com.haykor.fridge.core.data.remote.models.AccountType
 import com.haykor.fridge.core.data.remote.models.FridgeProductDto
