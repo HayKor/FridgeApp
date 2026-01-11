@@ -1,7 +1,6 @@
 package com.haykor.fridge.core.data.remote.api
 
 import com.haykor.fridge.core.data.remote.models.AuthResponse
-import com.haykor.fridge.core.data.remote.models.CreateUserRequest
 import com.haykor.fridge.core.data.remote.models.LoginRequest
 import com.haykor.fridge.core.data.remote.models.Result
 import retrofit2.http.Body
@@ -24,9 +23,4 @@ interface AuthService {
     suspend fun logout(
         @Header("Authorization") accessToken: String,
     )
-
-    @POST("users/")
-    suspend fun createUser(
-        @Body request: CreateUserRequest
-    ): Result<Unit>
 }
