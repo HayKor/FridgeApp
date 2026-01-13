@@ -2,7 +2,7 @@ package com.haykor.fridge.feature.home.presentation.screens.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.haykor.fridge.core.data.remote.models.FridgeProductsResponse
+import com.haykor.fridge.core.data.remote.models.FridgeProductsFilters
 import com.haykor.fridge.core.data.remote.models.Result
 import com.haykor.fridge.feature.home.data.FridgeProductsRepository
 import com.haykor.fridge.feature.home.domain.FridgeProductUi
@@ -52,11 +52,8 @@ class MainScreenViewModel @Inject constructor(
             _state.value = _state.value.copy(
                 isLoading = true
             )
-//            val response = fridgeProductsRepository.getFridgeProducts(FridgeProductsFilters())
 
-//             Stub
-            val response =
-                Result.Success(data = FridgeProductsResponse(fridgeProductsListStub(), 1, 1))
+            val response = fridgeProductsRepository.getFridgeProducts(FridgeProductsFilters())
             when (response) {
                 is Result.Success -> {
                     _state.value = _state.value.copy(

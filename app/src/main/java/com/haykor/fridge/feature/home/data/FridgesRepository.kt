@@ -8,5 +8,6 @@ interface FridgesRepository {
 
     suspend fun getFridges(): Result<List<FridgesDto>>
     suspend fun createFridge(fridge: CreateFridgeRequest): Result<FridgesDto>
+    suspend fun deleteFridge(fridgeId: Int): Result<Unit>
 }
 

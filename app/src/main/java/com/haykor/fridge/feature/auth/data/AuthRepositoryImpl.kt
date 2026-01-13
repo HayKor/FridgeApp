@@ -65,19 +65,17 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     private suspend fun hasValidAccessToken(): Boolean {
-        Log.d("tokens", "isAccessTokenExpired ${!tokenManager.isAccessTokenExpired()}")
         return !tokenManager.isAccessTokenExpired()
     }
 
     private suspend fun canRefreshToken(): Boolean {
-        Log.d(
-            "tokens", "canRefreshToken ${
-                !tokenManager.isRefreshTokenExpired() &&
-                        tokenManager.getRefreshToken() != null
-            }"
-        )
-        return !tokenManager.isRefreshTokenExpired() &&
-                tokenManager.getRefreshToken() != null
+        val canRefreshToken =
+            (!tokenManager.isRefreshTokenExpired()) && (tokenManager.getRefreshToken() != null)
+        Log.d("tokens", "canRefreshToken=${canRefreshToken}")
+        Log.d("tokens", "isRefreshTokenExpired=${tokenManager.isRefreshTokenExpired()}")
+        Log.d("tokens", "refreshToken=${tokenManager.getRefreshToken()}")
+        Log.d("tokens", "accessToken=${tokenManager.getAccessToken()}")
+        return canRefreshToken
     }
 
     private suspend fun refreshAndValidateToken(): Boolean {

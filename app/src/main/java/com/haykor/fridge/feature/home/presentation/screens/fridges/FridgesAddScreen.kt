@@ -23,6 +23,7 @@ import com.haykor.fridge.core.components.FridgeAppTextField
 @Composable
 fun FridgesAddScreen(
     onAddSuccess: () -> Unit,
+    modifier: Modifier = Modifier,
     viewModel: FridgesAddViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
@@ -46,7 +47,7 @@ fun FridgesAddScreen(
         name = state.name,
         onNameChange = viewModel::onNameChange,
         onAddClick = viewModel::createFridge,
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
     )
 }
 
@@ -69,7 +70,7 @@ private fun FridgesAddScreen(
             FridgeAppTextField(
                 value = name,
                 onValueChange = onNameChange,
-                label = "Название холодильника",
+                label = "Название",
                 modifier = Modifier.fillMaxWidth()
             )
             FridgeAppButton(

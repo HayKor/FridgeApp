@@ -19,4 +19,9 @@ class FridgesRepositoryImpl @Inject constructor(
         val response = fridgesService.createFridge(fridge)
         return response
     }
+
+    override suspend fun deleteFridge(fridgeId: Int): Result<Unit> {
+        val response = fridgesService.deleteFridge(fridgeId)
+        return response
+    }
 }

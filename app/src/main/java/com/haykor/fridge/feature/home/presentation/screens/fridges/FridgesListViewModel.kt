@@ -2,12 +2,11 @@ package com.haykor.fridge.feature.home.presentation.screens.fridges
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.haykor.fridge.core.data.remote.models.FridgesDto
 import com.haykor.fridge.core.data.remote.models.Result
 import com.haykor.fridge.feature.home.data.FridgesRepository
 import com.haykor.fridge.feature.home.domain.FridgesUi
+import com.haykor.fridge.feature.home.domain.toUi
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -28,10 +27,28 @@ class FridgesListViewModel @Inject constructor(
 
     fun onFridgeDelete(fridge: FridgesUi) {
         viewModelScope.launch {
-            // TODO: implement API logic
+            val result = fridgesRepository.deleteFridge(fridgeId = fridge.id)
+            when (result) {
+                is Result.Error -> {
+                    _state.value = FridgesListState.Error("Не удалось удалить")
+                }
+
+                is Result.Success -> {
+                    updateList(fridge)
+                }
+            }
+        }
+    }
+
+    private fun updateList(fridge: FridgesUi) {
+        val newList =
+            (_state.value as FridgesListState.Displaying).fridgesList.filter { it != fridge }
+        if (newList.isEmpty()) {
+            _state.value = FridgesListState.DisplayingEmpty
+        } else {
             _state.update {
                 FridgesListState.Displaying(
-                    fridgesList = (_state.value as FridgesListState.Displaying).fridgesList.filter { it != fridge }
+                    fridgesList = newList
                 )
             }
         }
@@ -40,8 +57,6 @@ class FridgesListViewModel @Inject constructor(
     fun fetch() {
         viewModelScope.launch {
             _state.value = FridgesListState.Loading
-
-            delay(1000L) // imitate work
 
             when (val result = fridgesRepository.getFridges()) {
                 is Result.Error -> {
@@ -72,12 +87,4 @@ sealed class FridgesListState {
     ) : FridgesListState()
 
     object DisplayingEmpty : FridgesListState()
-}
-
-
-fun FridgesDto.toUi(): FridgesUi {
-    return FridgesUi(
-        id = id,
-        name = name
-    )
 }

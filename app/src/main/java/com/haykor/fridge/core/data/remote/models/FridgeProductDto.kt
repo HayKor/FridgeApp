@@ -7,11 +7,17 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 
-@Serializable
 data class FridgeProductsFilters(
-    @SerialName("product_name_ilike") val productName: String? = null,
-    @SerialName("product_id_eq") val productId: Int? = null,
+    val productName: String? = null,
+    val productId: Int? = null,
 )
+
+fun FridgeProductsFilters.toMap(): Map<String, String> {
+    return buildMap {
+        productName?.let { put("product_name_ilike", it) }
+        productId?.let { put("product_id_eq", it.toString()) }
+    }
+}
 
 @OptIn(ExperimentalTime::class)
 @Serializable

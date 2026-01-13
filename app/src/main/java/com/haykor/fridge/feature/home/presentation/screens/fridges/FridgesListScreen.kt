@@ -154,7 +154,7 @@ private fun FridgesCard(
 ) {
     FridgeAppSwipeableCard(
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
+            containerColor = MaterialTheme.colorScheme.primary
         ),
         modifier = modifier
             .padding(2.dp),
