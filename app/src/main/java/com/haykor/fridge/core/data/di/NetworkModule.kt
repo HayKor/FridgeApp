@@ -15,6 +15,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.contextual
@@ -101,7 +103,7 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideResultCallAdapterFactory(): ResultCallAdapterFactory {
-        return ResultCallAdapterFactory()
+        return ResultCallAdapterFactory(CoroutineScope(Dispatchers.IO))
     }
 
     @Provides
