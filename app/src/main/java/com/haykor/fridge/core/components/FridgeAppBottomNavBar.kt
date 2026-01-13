@@ -1,4 +1,4 @@
-package com.haykor.fridge.core.navigation
+package com.haykor.fridge.core.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.material3.Icon
@@ -6,18 +6,18 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.haykor.fridge.R
+import com.haykor.fridge.core.navigation.MainScreens
 
 @Composable
 fun BottomNavBar(
     navController: NavController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier.Companion
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -34,6 +34,7 @@ fun BottomNavBar(
                 selected = selected,
                 icon = { Icon(painterResource(route.icon), route.label) },
                 label = { Text(route.label) },
+                alwaysShowLabel = false,
                 onClick = {
                     navController.navigate(route.route) {
                         popUpTo(navController.graph.findStartDestination().id) {

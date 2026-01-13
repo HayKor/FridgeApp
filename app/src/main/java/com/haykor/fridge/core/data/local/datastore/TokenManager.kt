@@ -1,5 +1,6 @@
 package com.haykor.fridge.core.data.local.datastore
 
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -25,9 +26,9 @@ class TokenManager @Inject constructor(
 
     suspend fun saveTokens(authResponse: AuthResponse) {
         val accessTokenExpiryTime =
-            System.currentTimeMillis() + (authResponse.accessTokenExpiresIn * 60 * 1000)
+            System.currentTimeMillis() + (authResponse.accessTokenExpiresIn * 60 * 1000L)
         val refreshTokenExpiryTime =
-            System.currentTimeMillis() + (authResponse.refreshTokenExpiresIn * 24 * 60 * 60 * 1000)
+            System.currentTimeMillis() + (authResponse.refreshTokenExpiresIn * 24 * 60 * 60 * 1000L)
 
         dataStore.edit { preferences ->
             preferences[ACCESS_TOKEN] = authResponse.accessToken
@@ -47,11 +48,14 @@ class TokenManager @Inject constructor(
 
     suspend fun isAccessTokenExpired(): Boolean {
         val expiry = dataStore.data.map { it[ACCESS_TOKEN_EXPIRY] ?: 0L }.first()
+        Log.d("tokens", "expiryAccess=$expiry currentTime=${System.currentTimeMillis()}")
         return System.currentTimeMillis() >= expiry - 60000 // 1 minute buffer
     }
 
     suspend fun isRefreshTokenExpired(): Boolean {
-        val expiry = dataStore.data.map { it[REFRESH_TOKEN_EXPIRY] ?: 0L }.first()
+        val expiry =
+            dataStore.data.map { it[REFRESH_TOKEN_EXPIRY] ?: 0L }.first() // FIXME: doesn't work idk
+        Log.d("tokens", "expiryRefresh=$expiry currentTime=${System.currentTimeMillis()}")
         return System.currentTimeMillis() >= expiry
     }
 
