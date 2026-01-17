@@ -6,8 +6,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.haykor.fridge.auth.presentation.screens.login.LoginScreen
-import com.haykor.fridge.auth.presentation.screens.registration.RegistrationScreen
+import com.haykor.fridge.feature.auth.presentation.screens.login.LoginScreen
+import com.haykor.fridge.feature.auth.presentation.screens.registration.RegistrationScreen
 import kotlinx.serialization.Serializable
 
 @Composable

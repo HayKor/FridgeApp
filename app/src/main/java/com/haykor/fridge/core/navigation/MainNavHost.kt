@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.haykor.fridge.core.components.FridgeAppBottomNavBar
 import kotlinx.serialization.Serializable
 
 @Composable
@@ -16,7 +17,7 @@ fun MainNavHost(
     val mainNavController = rememberNavController()
     Scaffold(
         bottomBar = {
-            BottomNavBar(mainNavController)
+            FridgeAppBottomNavBar(mainNavController)
         },
         modifier = modifier
     ) { paddingValues ->
@@ -28,6 +29,9 @@ fun MainNavHost(
             composable<MainScreens.Home> {
                 HomeNavHost(mainNavController = mainNavController)
             }
+            composable<MainScreens.Fridges> {
+                FridgesNavHost(mainNavController = mainNavController)
+            }
         }
     }
 }
@@ -35,4 +39,7 @@ fun MainNavHost(
 sealed class MainScreens() {
     @Serializable
     object Home : MainScreens()
+
+    @Serializable
+    object Fridges : MainScreens()
 }

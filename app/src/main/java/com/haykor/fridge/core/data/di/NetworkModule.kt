@@ -5,6 +5,7 @@ import com.haykor.fridge.core.data.local.datastore.TokenManager
 import com.haykor.fridge.core.data.remote.adapters.ResultCallAdapterFactory
 import com.haykor.fridge.core.data.remote.api.AuthService
 import com.haykor.fridge.core.data.remote.api.FridgeProductsService
+import com.haykor.fridge.core.data.remote.api.FridgesService
 import com.haykor.fridge.core.data.remote.api.UserService
 import com.haykor.fridge.core.data.remote.interceptors.AuthInterceptor
 import com.haykor.fridge.core.data.remote.interceptors.UserAgentInterceptor
@@ -14,6 +15,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.contextual
@@ -28,6 +31,12 @@ import kotlin.time.ExperimentalTime
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+
+    @Provides
+    @Singleton
+    fun provideFridgesService(retrofit: Retrofit): FridgesService {
+        return retrofit.create(FridgesService::class.java)
+    }
 
     @Provides
     @Singleton
@@ -94,7 +103,7 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideResultCallAdapterFactory(): ResultCallAdapterFactory {
-        return ResultCallAdapterFactory()
+        return ResultCallAdapterFactory(CoroutineScope(Dispatchers.IO))
     }
 
     @Provides
