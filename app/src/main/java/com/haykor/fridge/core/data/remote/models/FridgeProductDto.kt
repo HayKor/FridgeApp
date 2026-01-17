@@ -10,12 +10,14 @@ import kotlin.time.Instant
 data class FridgeProductsFilters(
     val productName: String? = null,
     val productId: Int? = null,
+    val fridgeId: Int? = null
 )
 
 fun FridgeProductsFilters.toMap(): Map<String, String> {
     return buildMap {
         productName?.let { put("product_name_ilike", it) }
         productId?.let { put("product_id_eq", it.toString()) }
+        fridgeId?.let { put("fridge_id_eq", it.toString()) }
     }
 }
 
