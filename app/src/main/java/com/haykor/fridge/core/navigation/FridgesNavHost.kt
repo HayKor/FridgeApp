@@ -10,7 +10,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.haykor.fridge.core.components.FridgeAppTopNavBar
+import com.haykor.fridge.feature.fridge_content.presentation.screens.FridgeContentScreen
+import com.haykor.fridge.feature.fridge_content.presentation.screens.FridgeContentViewModel
 import com.haykor.fridge.feature.home.presentation.screens.fridges.FridgesAddScreen
 import com.haykor.fridge.feature.home.presentation.screens.fridges.FridgesListScreen
 import com.haykor.fridge.feature.home.presentation.screens.fridges.FridgesListViewModel
@@ -34,6 +37,14 @@ fun FridgesNavHost(
                 viewModel = fridgesListViewModel,
                 onAddFridge = {
                     fridgesNavController.navigate(FridgesScreens.FridgesAdd)
+                },
+                onNavigateFridge = { fridgeId ->
+                    fridgesNavController.navigate(
+                        FridgesScreens.FridgeContent(
+                            fridgeId,
+                            "test"
+                        )
+                    ) // FIXME: 'test'
                 }
             )
         }
@@ -56,6 +67,30 @@ fun FridgesNavHost(
                 )
             }
         }
+        composable<FridgesScreens.FridgeContent> {
+            val args = it.toRoute<FridgesScreens.FridgeContent>()
+            val (fridgeId, fridgeName) = args
+            val viewModel: FridgeContentViewModel = hiltViewModel(
+                creationCallback = { factory: FridgeContentViewModel.Factory ->
+                    factory.create(fridgeId)
+                }
+            )
+            Scaffold(
+                topBar = {
+                    FridgeAppTopNavBar(
+                        title = "Содержимое холодильника",
+                        onClick = { fridgesNavController.popBackStack() }
+                    )
+                },
+                contentWindowInsets = WindowInsets()
+            ) { paddingValues ->
+                FridgeContentScreen(
+                    fridgeName = fridgeName,
+                    viewModel = viewModel,
+                    modifier = Modifier.padding(paddingValues)
+                )
+            }
+        }
     }
 }
 
@@ -65,4 +100,7 @@ sealed class FridgesScreens() {
 
     @Serializable
     object FridgesAdd : FridgesScreens()
+
+    @Serializable
+    data class FridgeContent(val fridgeId: Int, val fridgeName: String) : FridgesScreens()
 }
