@@ -50,3 +50,10 @@ private fun Instant.toFormattedString(): String {
         year()
     })
 }
+
+fun AccountType.toMark(): String {
+    return when (this) {
+        AccountType.WEIGHT -> "кг"
+        AccountType.VOLUME -> "л"
+    }
+}
