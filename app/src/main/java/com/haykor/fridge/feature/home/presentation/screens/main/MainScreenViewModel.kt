@@ -10,6 +10,7 @@ import com.haykor.fridge.feature.home.domain.toUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -39,11 +40,21 @@ class MainScreenViewModel @Inject constructor(
     }
 
     fun onFridgeProductDelete(item: FridgeProductUi) {
-        // TODO: implement logic on deleting with API
         viewModelScope.launch {
-            _state.value = _state.value.copy(
-                items = _state.value.items.filter { it != item }
-            )
+            val result = fridgeProductsRepository.deleteFridgeProduct(item.id)
+            when (result) {
+                is Result.Error -> {
+                    _state.update { it.copy(error = "Couldn't delete product") }
+                }
+
+                is Result.Success -> {
+                    _state.update {
+                        it.copy(
+                            items = _state.value.items.filter { product -> product != item }
+                        )
+                    }
+                }
+            }
         }
     }
 

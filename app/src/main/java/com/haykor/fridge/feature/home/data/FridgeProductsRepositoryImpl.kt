@@ -14,4 +14,8 @@ class FridgeProductsRepositoryImpl @Inject constructor(
     override suspend fun getFridgeProducts(filters: FridgeProductsFilters): Result<FridgeProductsResponse> {
         return fridgeProductsService.getFridgeProducts(filters.toMap())
     }
+
+    override suspend fun deleteFridgeProduct(id: Int): Result<Unit> {
+        return fridgeProductsService.deleteFridgeProduct(id)
+    }
 }
