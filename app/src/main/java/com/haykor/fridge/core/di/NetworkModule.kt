@@ -1,11 +1,9 @@
-package com.haykor.fridge.core.data.di
+package com.haykor.fridge.core.di
 
 import com.haykor.fridge.BuildConfig
 import com.haykor.fridge.core.data.local.datastore.TokenManager
 import com.haykor.fridge.core.data.remote.adapters.ResultCallAdapterFactory
 import com.haykor.fridge.core.data.remote.api.AuthService
-import com.haykor.fridge.core.data.remote.api.FridgeProductsService
-import com.haykor.fridge.core.data.remote.api.FridgesService
 import com.haykor.fridge.core.data.remote.api.UserService
 import com.haykor.fridge.core.data.remote.interceptors.AuthInterceptor
 import com.haykor.fridge.core.data.remote.interceptors.UserAgentInterceptor
@@ -31,24 +29,6 @@ import kotlin.time.ExperimentalTime
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-
-    @Provides
-    @Singleton
-    fun provideFridgesService(retrofit: Retrofit): FridgesService {
-        return retrofit.create(FridgesService::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideFridgeProductsService(retrofit: Retrofit): FridgeProductsService {
-        return retrofit.create(FridgeProductsService::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideAuthService(retrofit: Retrofit): AuthService {
-        return retrofit.create(AuthService::class.java)
-    }
 
     @Provides
     @Singleton

@@ -1,4 +1,4 @@
-package com.haykor.fridge.core.data.di
+package com.haykor.fridge.core.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore
