@@ -4,9 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.haykor.fridge.core.data.remote.models.FridgeProductsFilters
 import com.haykor.fridge.core.data.remote.models.Result
-import com.haykor.fridge.feature.home.data.FridgeProductsRepository
-import com.haykor.fridge.feature.home.domain.FridgeProductUi
-import com.haykor.fridge.feature.home.domain.toUi
+import com.haykor.fridge.feature.fridge_content.data.FridgeProductsRepository
+import com.haykor.fridge.feature.fridge_content.domain.FridgeProductUi
+import com.haykor.fridge.feature.fridge_content.domain.toUi
+import com.haykor.fridge.feature.fridge_content.presentation.screens.FilterType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -65,6 +66,13 @@ class MainScreenViewModel @Inject constructor(
             )
 
             val response = fridgeProductsRepository.getFridgeProducts(FridgeProductsFilters())
+//            val response = Result.Success(
+//                FridgeProductsResponse(
+//                    totalItems = 0,
+//                    totalPages = 0,
+//                    items = fridgeProductsListStub()
+//                )
+//            )
             when (response) {
                 is Result.Success -> {
                     _state.value = _state.value.copy(
@@ -99,10 +107,3 @@ data class MainScreenState(
     val isLoading: Boolean = false,
     val error: String? = null
 )
-
-enum class FilterType(val displayName: String) {
-    NAME("Название"),
-    EXPIRY("Срок годности");
-
-    override fun toString() = displayName
-}

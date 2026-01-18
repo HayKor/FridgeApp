@@ -4,10 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.haykor.fridge.core.data.remote.models.FridgeProductsFilters
 import com.haykor.fridge.core.data.remote.models.Result
-import com.haykor.fridge.feature.home.data.FridgeProductsRepository
-import com.haykor.fridge.feature.home.domain.FridgeProductUi
-import com.haykor.fridge.feature.home.domain.toUi
-import com.haykor.fridge.feature.home.presentation.screens.main.FilterType
+import com.haykor.fridge.feature.fridge_content.data.FridgeProductsRepository
+import com.haykor.fridge.feature.fridge_content.domain.FridgeProductUi
+import com.haykor.fridge.feature.fridge_content.domain.toUi
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -109,3 +108,10 @@ data class FridgeContentState(
     val isLoading: Boolean = false,
     val error: String? = null
 )
+
+enum class FilterType(val displayName: String) {
+    NAME("Название"),
+    EXPIRY("Срок годности");
+
+    override fun toString() = displayName
+}

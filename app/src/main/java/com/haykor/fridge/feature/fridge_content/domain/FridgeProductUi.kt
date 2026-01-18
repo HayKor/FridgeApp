@@ -1,4 +1,4 @@
-package com.haykor.fridge.feature.home.domain
+package com.haykor.fridge.feature.fridge_content.domain
 
 import com.haykor.fridge.core.data.remote.models.AccountType
 import com.haykor.fridge.core.data.remote.models.FridgeProductDto
@@ -8,7 +8,6 @@ import kotlin.time.Clock
 import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
-
 
 data class FridgeProductUi(
     val id: Int,
@@ -42,7 +41,7 @@ fun FridgeProductDto.toUi(): FridgeProductUi {
 
 @OptIn(ExperimentalTime::class)
 private fun Instant.toFormattedString(): String {
-    return this.format(DateTimeComponents.Format {
+    return this.format(DateTimeComponents.Companion.Format {
         day()
         chars(".")
         monthNumber()

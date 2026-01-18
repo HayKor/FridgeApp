@@ -1,4 +1,4 @@
-package com.haykor.fridge.feature.home.data
+package com.haykor.fridge.feature.fridge_content.data
 
 import com.haykor.fridge.core.data.remote.api.FridgeProductsService
 import com.haykor.fridge.core.data.remote.models.FridgeProductsFilters

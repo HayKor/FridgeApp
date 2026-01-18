@@ -16,9 +16,10 @@ import com.haykor.fridge.core.data.remote.models.FridgeProductDto
 import com.haykor.fridge.core.data.remote.models.ProductDto
 import com.haykor.fridge.core.data.remote.models.ProductTypeDto
 import com.haykor.fridge.core.theme.FridgeAppTheme
+import com.haykor.fridge.feature.fridge_content.domain.FridgeProductUi
+import com.haykor.fridge.feature.fridge_content.domain.toUi
 import com.haykor.fridge.feature.fridge_content.presentation.FridgeContentLayout
-import com.haykor.fridge.feature.home.domain.FridgeProductUi
-import com.haykor.fridge.feature.home.domain.toUi
+import com.haykor.fridge.feature.fridge_content.presentation.screens.FilterType
 import kotlin.time.Clock
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days

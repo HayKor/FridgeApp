@@ -7,7 +7,9 @@ import com.haykor.fridge.feature.home.data.FridgesRepository
 import com.haykor.fridge.feature.home.domain.FridgesUi
 import com.haykor.fridge.feature.home.domain.toUi
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -20,17 +22,20 @@ class FridgesListViewModel @Inject constructor(
 
     private val _state = MutableStateFlow<FridgesListState>(FridgesListState.Loading)
     val state = _state.asStateFlow()
+    private val _events = MutableSharedFlow<FridgesEvent>()
+    val events = _events.asSharedFlow()
 
     init {
         fetch()
     }
 
+    // TODO: make it return boolean so UI can обработать сучк
     fun onFridgeDelete(fridge: FridgesUi) {
         viewModelScope.launch {
             val result = fridgesRepository.deleteFridge(fridgeId = fridge.id)
             when (result) {
                 is Result.Error -> {
-                    _state.value = FridgesListState.Error("Не удалось удалить")
+                    _events.emit(FridgesEvent.Error)
                 }
 
                 is Result.Success -> {
@@ -87,4 +92,8 @@ sealed class FridgesListState {
     ) : FridgesListState()
 
     object DisplayingEmpty : FridgesListState()
+}
+
+sealed class FridgesEvent {
+    object Error : FridgesEvent()
 }

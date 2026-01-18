@@ -41,10 +41,10 @@ import com.haykor.fridge.core.components.FridgeAppSwipeableCard
 import com.haykor.fridge.core.components.FridgeAppTextField
 import com.haykor.fridge.core.data.remote.models.FridgeProductDto
 import com.haykor.fridge.core.theme.FridgeAppTheme
-import com.haykor.fridge.feature.home.domain.FridgeProductUi
-import com.haykor.fridge.feature.home.domain.toMark
-import com.haykor.fridge.feature.home.domain.toUi
-import com.haykor.fridge.feature.home.presentation.screens.main.FilterType
+import com.haykor.fridge.feature.fridge_content.domain.FridgeProductUi
+import com.haykor.fridge.feature.fridge_content.domain.toMark
+import com.haykor.fridge.feature.fridge_content.domain.toUi
+import com.haykor.fridge.feature.fridge_content.presentation.screens.FilterType
 import com.haykor.fridge.feature.home.presentation.screens.main.fridgeProductsListStub
 import kotlin.time.ExperimentalTime
 
