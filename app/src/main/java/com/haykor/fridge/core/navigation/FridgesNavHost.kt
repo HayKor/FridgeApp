@@ -39,12 +39,7 @@ fun FridgesNavHost(
                     fridgesNavController.navigate(FridgesScreens.FridgesAdd)
                 },
                 onNavigateFridge = { fridgeId ->
-                    fridgesNavController.navigate(
-                        FridgesScreens.FridgeContent(
-                            fridgeId,
-                            "test"
-                        )
-                    ) // FIXME: 'test'
+                    fridgesNavController.navigate(FridgesScreens.FridgeContent(fridgeId))
                 }
             )
         }
@@ -69,7 +64,7 @@ fun FridgesNavHost(
         }
         composable<FridgesScreens.FridgeContent> {
             val args = it.toRoute<FridgesScreens.FridgeContent>()
-            val (fridgeId, fridgeName) = args
+            val fridgeId = args.fridgeId
             val viewModel: FridgeContentViewModel = hiltViewModel(
                 creationCallback = { factory: FridgeContentViewModel.Factory ->
                     factory.create(fridgeId)
@@ -85,7 +80,6 @@ fun FridgesNavHost(
                 contentWindowInsets = WindowInsets()
             ) { paddingValues ->
                 FridgeContentScreen(
-                    fridgeName = fridgeName,
                     viewModel = viewModel,
                     modifier = Modifier.padding(paddingValues)
                 )
@@ -102,5 +96,5 @@ sealed class FridgesScreens() {
     object FridgesAdd : FridgesScreens()
 
     @Serializable
-    data class FridgeContent(val fridgeId: Int, val fridgeName: String) : FridgesScreens()
+    data class FridgeContent(val fridgeId: Int) : FridgesScreens()
 }

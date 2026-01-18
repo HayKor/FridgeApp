@@ -11,7 +11,6 @@ import com.haykor.fridge.feature.fridge_content.presentation.FridgeContentLayout
 
 @Composable
 fun FridgeContentScreen(
-    fridgeName: String,
     viewModel: FridgeContentViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -21,7 +20,7 @@ fun FridgeContentScreen(
         color = MaterialTheme.colorScheme.surfaceContainerLow,
     ) {
         FridgeContentLayout(
-            header = fridgeName,
+            header = state.fridgeName,
             productNameFilter = state.productNameFilter,
             onProductNameFilterChange = viewModel::onProductNameFilterChange,
             selectedFilterType = state.filterType,

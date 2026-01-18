@@ -7,6 +7,7 @@ import com.haykor.fridge.core.data.remote.models.Result
 import com.haykor.fridge.feature.fridge_content.data.FridgeProductsRepository
 import com.haykor.fridge.feature.fridge_content.domain.FridgeProductUi
 import com.haykor.fridge.feature.fridge_content.domain.toUi
+import com.haykor.fridge.feature.home.data.FridgesRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -18,6 +19,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = FridgeContentViewModel.Factory::class)
 class FridgeContentViewModel @AssistedInject constructor(
+    private val fridgesRepository: FridgesRepository,
     private val fridgeProductsRepository: FridgeProductsRepository,
     @Assisted private val fridgeId: Int
 ) : ViewModel() {
@@ -26,6 +28,7 @@ class FridgeContentViewModel @AssistedInject constructor(
     val state = _state.asStateFlow()
 
     init {
+        fetchFridgeName()
         fetchFridgeProducts()
     }
 
@@ -56,6 +59,23 @@ class FridgeContentViewModel @AssistedInject constructor(
                             items = _state.value.items.filter { product -> product != item }
                         )
                     }
+                }
+            }
+        }
+    }
+
+    private fun fetchFridgeName() {
+        viewModelScope.launch {
+            when (val result = fridgesRepository.getFridge(fridgeId)) {
+                is Result.Error -> {
+                    _state.value = _state.value.copy(
+                        isLoading = false,
+                        error = "При загрузке данных что-то пошло не так"
+                    )
+                }
+
+                is Result.Success -> {
+                    _state.update { it.copy(fridgeName = result.data.name) }
                 }
             }
         }
@@ -102,6 +122,7 @@ class FridgeContentViewModel @AssistedInject constructor(
 }
 
 data class FridgeContentState(
+    val fridgeName: String = "Загрузка...",
     val items: List<FridgeProductUi> = emptyList(),
     val productNameFilter: String = "",
     val filterType: FilterType = FilterType.NAME,
