@@ -64,18 +64,18 @@ fun FridgeContentLayout(
         modifier = modifier
     ) {
         FridgeProductsHeader(header)
-        Spacer(Modifier.Companion.height(8.dp))
+        Spacer(Modifier.height(8.dp))
         FridgeProductsFilterSection(
             productNameFilter = productNameFilter,
             onProductNameFilterChange = onProductNameFilterChange,
             selectedFilterType = selectedFilterType,
             onSelectedFilterTypeChange = onSelectedFilterTypeChange
         )
-        Spacer(Modifier.Companion.height(8.dp))
+        Spacer(Modifier.height(8.dp))
         if (isLoading) {
             Box(
-                contentAlignment = Alignment.Companion.Center,
-                modifier = Modifier.Companion.fillMaxSize()
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
             ) {
                 CircularProgressIndicator()
             }
@@ -96,12 +96,14 @@ private fun FridgeProductsHeader(
 ) {
     Row(
         horizontalArrangement = Arrangement.Center,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp)
     ) {
         Text(
             text = text,
             style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Companion.Bold,
+            fontWeight = FontWeight.Bold,
         )
     }
 }
@@ -128,12 +130,12 @@ private fun FridgeProductsFilterSection(
             leadingIcon = {
                 Icon(Icons.Filled.Search, null)
             },
-            modifier = Modifier.Companion.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()
         )
         ExposedDropdownMenuBox(
             expanded = expanded,
             onExpandedChange = { expanded = it },
-            modifier = Modifier.Companion
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
         ) {
@@ -143,14 +145,14 @@ private fun FridgeProductsFilterSection(
                 readOnly = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 shape = RoundedCornerShape(10.dp),
-                modifier = Modifier.Companion
+                modifier = Modifier
                     .menuAnchor(ExposedDropdownMenuAnchorType.Companion.PrimaryNotEditable)
                     .fillMaxWidth()
             )
             ExposedDropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
-                modifier = Modifier.Companion
+                modifier = Modifier
                     .exposedDropdownSize()
             ) {
                 FilterType.entries.forEach { filterType ->
@@ -186,7 +188,7 @@ private fun FridgeProductsList(
             FridgeProductCard(
                 item = it,
                 onItemDelete = { onItemDelete(it) },
-                modifier = Modifier.Companion
+                modifier = Modifier
                     .fillMaxWidth()
                     .animateItem()
             )
@@ -216,14 +218,14 @@ private fun FridgeProductCard(
         modifier = modifier
     ) {
         Column(
-            modifier = Modifier.Companion
+            modifier = Modifier
                 .padding(8.dp)
                 .fillMaxWidth()
         ) {
             Text(
                 text = item.name,
                 style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Companion.Bold
+                fontWeight = FontWeight.Bold
             )
             Text(
                 text = "Тип: ${item.slug}",

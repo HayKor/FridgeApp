@@ -29,6 +29,7 @@ class AuthRepositoryImpl @Inject constructor(
         return response
     }
 
+    // FIXME: something wrong with refreshing tokens AGAIN
     override suspend fun refreshTokens(refreshToken: String): Result<AuthResponse> {
         val refreshToken =
             tokenManager.getRefreshToken() ?: return Result.Error("No refresh token stored")
@@ -87,7 +88,7 @@ class AuthRepositoryImpl @Inject constructor(
             val response = refreshTokens(
                 refreshToken = CookieUtil.createRefreshTokenCookie(refreshToken)
             )
-            Log.d("tokens", "$response")
+            Log.d("tokens", "response=$response")
             when (response) {
                 is Result.Success -> {
                     true
@@ -95,7 +96,6 @@ class AuthRepositoryImpl @Inject constructor(
 
                 is Result.Error -> {
                     tokenManager.clearTokens()
-                    Log.d("tokens", "exception msg ${response.msg}")
                     false
                 }
             }
