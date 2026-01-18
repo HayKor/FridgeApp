@@ -9,18 +9,16 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface AuthService {
+
     @POST("auth/login")
     suspend fun login(
         @Body request: LoginRequest,
     ): Result<AuthResponse>
 
-    @POST("auth/refresh_tokens")
-    suspend fun refreshTokens(
-        @Header("Cookie") refreshToken: String,
-    ): Result<AuthResponse>
 
     @DELETE("auth/logout")
     suspend fun logout(
-        @Header("Authorization") accessToken: String,
+        @Header("Authorization") accessToken: String, // FIXME: potentially fix the header
     )
 }
+

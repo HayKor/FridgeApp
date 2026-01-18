@@ -3,6 +3,7 @@ package com.haykor.fridge.feature.auth.data
 import android.util.Log
 import com.haykor.fridge.core.data.local.datastore.TokenManager
 import com.haykor.fridge.core.data.remote.api.AuthService
+import com.haykor.fridge.core.data.remote.api.RefreshTokensService
 import com.haykor.fridge.core.data.remote.api.UserService
 import com.haykor.fridge.core.data.remote.models.AuthResponse
 import com.haykor.fridge.core.data.remote.models.CreateUserRequest
@@ -14,6 +15,7 @@ import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val authService: AuthService,
+    private val refreshTokensService: RefreshTokensService,
     private val userService: UserService,
     private val tokenManager: TokenManager
 ) : AuthRepository {
@@ -30,7 +32,7 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun refreshTokens(refreshToken: String): Result<AuthResponse> {
         val refreshToken =
             tokenManager.getRefreshToken() ?: return Result.Error("No refresh token stored")
-        val response = authService.refreshTokens(
+        val response = refreshTokensService.refreshTokens(
             refreshToken = CookieUtil.createRefreshTokenCookie(refreshToken)
         )
         if (response is Result.Success)

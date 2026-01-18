@@ -3,12 +3,11 @@ package com.haykor.fridge.core.di
 import com.haykor.fridge.BuildConfig
 import com.haykor.fridge.core.data.local.datastore.TokenManager
 import com.haykor.fridge.core.data.remote.adapters.ResultCallAdapterFactory
-import com.haykor.fridge.core.data.remote.api.AuthService
+import com.haykor.fridge.core.data.remote.api.RefreshTokensService
 import com.haykor.fridge.core.data.remote.api.UserService
 import com.haykor.fridge.core.data.remote.interceptors.AuthInterceptor
 import com.haykor.fridge.core.data.remote.interceptors.UserAgentInterceptor
 import com.haykor.fridge.core.data.remote.util.InstantSerializer
-import dagger.Lazy
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -90,9 +89,9 @@ object NetworkModule {
     @Singleton
     fun provideAuthInterceptor(
         tokenManager: TokenManager,
-        authService: Lazy<AuthService>
+        refreshTokensService: RefreshTokensService
     ): AuthInterceptor {
-        return AuthInterceptor(tokenManager, authService)
+        return AuthInterceptor(tokenManager, refreshTokensService)
     }
 
     @Provides
