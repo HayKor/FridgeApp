@@ -41,7 +41,7 @@ fun FridgeProductDto.toUi(): FridgeProductUi {
 
 @OptIn(ExperimentalTime::class)
 private fun Instant.toFormattedString(): String {
-    return this.format(DateTimeComponents.Companion.Format {
+    return this.format(DateTimeComponents.Format {
         day()
         chars(".")
         monthNumber()
