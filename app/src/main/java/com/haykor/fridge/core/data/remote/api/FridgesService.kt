@@ -18,6 +18,11 @@ interface FridgesService {
     @GET(ROUTE)
     suspend fun getFridges(): Result<List<FridgesDto>>
 
+    @GET(ROUTE + "{id}")
+    suspend fun getFridge(
+        @Path("id") fridgeId: Int
+    ): Result<FridgesDto>
+
     @POST(ROUTE)
     suspend fun createFridge(
         @Body request: CreateFridgeRequest

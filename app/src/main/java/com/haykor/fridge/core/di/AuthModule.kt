@@ -2,6 +2,7 @@ package com.haykor.fridge.core.di
 
 import com.haykor.fridge.core.data.local.datastore.TokenManager
 import com.haykor.fridge.core.data.remote.api.AuthService
+import com.haykor.fridge.core.data.remote.api.RefreshTokensService
 import com.haykor.fridge.core.data.remote.api.UserService
 import com.haykor.fridge.feature.auth.data.AuthRepository
 import com.haykor.fridge.feature.auth.data.AuthRepositoryImpl
@@ -27,11 +28,13 @@ object AuthModule {
     fun provideAuthRepository(
         authService: AuthService,
         userService: UserService,
+        refreshTokensService: RefreshTokensService,
         tokenManager: TokenManager
     ): AuthRepository {
         return AuthRepositoryImpl(
             authService = authService,
             userService = userService,
+            refreshTokensService = refreshTokensService,
             tokenManager = tokenManager
         )
     }

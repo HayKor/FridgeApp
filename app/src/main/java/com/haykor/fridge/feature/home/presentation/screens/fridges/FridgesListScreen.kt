@@ -1,6 +1,9 @@
 package com.haykor.fridge.feature.home.presentation.screens.fridges
 
 import android.widget.Toast
+import androidx.compose.foundation.LocalIndication
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -22,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -39,6 +43,7 @@ import com.haykor.fridge.feature.home.domain.FridgesUi
 @Composable
 fun FridgesListScreen(
     onAddFridge: () -> Unit,
+    onNavigateFridge: (fridgeId: Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: FridgesListViewModel = hiltViewModel()
 ) {
@@ -57,6 +62,7 @@ fun FridgesListScreen(
         FridgesListScreen(
             state = state,
             onFridgeDelete = viewModel::onFridgeDelete,
+            onFridgeClick = onNavigateFridge,
             modifier = modifier
                 .padding(paddingValues)
                 .fillMaxSize()
@@ -68,6 +74,7 @@ fun FridgesListScreen(
 private fun FridgesListScreen(
     state: FridgesListState,
     onFridgeDelete: (FridgesUi) -> Unit,
+    onFridgeClick: (fridgeId: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     when (state) {
@@ -81,6 +88,7 @@ private fun FridgesListScreen(
             FridgesListDisplaying(
                 fridgesList = state.fridgesList,
                 onFridgeDelete = onFridgeDelete,
+                onFridgeClick = onFridgeClick,
                 modifier = modifier.fillMaxSize()
             )
         }
@@ -126,6 +134,7 @@ private fun FridgesListDisplayingEmpty(
 private fun FridgesListDisplaying(
     fridgesList: List<FridgesUi>,
     onFridgeDelete: (FridgesUi) -> Unit,
+    onFridgeClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -139,7 +148,10 @@ private fun FridgesListDisplaying(
                 FridgesCard(
                     fridge = fridge,
                     onFridgeDelete = { onFridgeDelete(fridge) },
-                    modifier = Modifier.fillMaxWidth().animateItem()
+                    onFridgeClick = { onFridgeClick(fridge.id) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateItem()
                 )
             }
         }
@@ -150,14 +162,23 @@ private fun FridgesListDisplaying(
 private fun FridgesCard(
     fridge: FridgesUi,
     onFridgeDelete: () -> Unit,
+    onFridgeClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val indication = LocalIndication.current
+    val interactionSource = remember { MutableInteractionSource() }
+
     FridgeAppSwipeableCard(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primary
         ),
         modifier = modifier
-            .padding(2.dp),
+            .padding(2.dp)
+            .clickable(
+                interactionSource = interactionSource,
+                indication = indication,
+                onClick = onFridgeClick
+            ),
         onItemDelete = onFridgeDelete,
     ) {
         Box(
@@ -208,6 +229,7 @@ private fun FridgesListDisplayingPreview() {
                 )
             ),
             onFridgeDelete = {},
+            onFridgeClick = {},
             modifier = Modifier.fillMaxSize()
         )
     }

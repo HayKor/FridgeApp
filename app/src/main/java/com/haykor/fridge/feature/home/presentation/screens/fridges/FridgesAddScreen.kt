@@ -74,7 +74,8 @@ private fun FridgesAddScreen(
                 modifier = Modifier.fillMaxWidth()
             )
             FridgeAppButton(
-                onClick = onAddClick
+                onClick = onAddClick,
+                enabled = name.isNotBlank()
             ) {
                 Text(
                     text = "Создать холодильник",

@@ -1,4 +1,4 @@
-package com.haykor.fridge.feature.home.data
+package com.haykor.fridge.feature.fridge_content.data
 
 import com.haykor.fridge.core.data.remote.api.FridgeProductsService
 import com.haykor.fridge.core.data.remote.models.FridgeProductsFilters
@@ -13,5 +13,9 @@ class FridgeProductsRepositoryImpl @Inject constructor(
 
     override suspend fun getFridgeProducts(filters: FridgeProductsFilters): Result<FridgeProductsResponse> {
         return fridgeProductsService.getFridgeProducts(filters.toMap())
+    }
+
+    override suspend fun deleteFridgeProduct(id: Int): Result<Unit> {
+        return fridgeProductsService.deleteFridgeProduct(id)
     }
 }

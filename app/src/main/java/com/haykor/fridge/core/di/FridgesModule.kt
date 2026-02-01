@@ -2,8 +2,8 @@ package com.haykor.fridge.core.di
 
 import com.haykor.fridge.core.data.remote.api.FridgeProductsService
 import com.haykor.fridge.core.data.remote.api.FridgesService
-import com.haykor.fridge.feature.home.data.FridgeProductsRepository
-import com.haykor.fridge.feature.home.data.FridgeProductsRepositoryImpl
+import com.haykor.fridge.feature.fridge_content.data.FridgeProductsRepository
+import com.haykor.fridge.feature.fridge_content.data.FridgeProductsRepositoryImpl
 import com.haykor.fridge.feature.home.data.FridgesRepository
 import com.haykor.fridge.feature.home.data.FridgesRepositoryImpl
 import dagger.Module

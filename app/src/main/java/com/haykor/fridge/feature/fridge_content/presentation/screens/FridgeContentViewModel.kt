@@ -1,4 +1,4 @@
-package com.haykor.fridge.feature.home.presentation.screens.main
+package com.haykor.fridge.feature.fridge_content.presentation.screens
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,23 +7,28 @@ import com.haykor.fridge.core.data.remote.models.Result
 import com.haykor.fridge.feature.fridge_content.data.FridgeProductsRepository
 import com.haykor.fridge.feature.fridge_content.domain.FridgeProductUi
 import com.haykor.fridge.feature.fridge_content.domain.toUi
-import com.haykor.fridge.feature.fridge_content.presentation.screens.FilterType
+import com.haykor.fridge.feature.home.data.FridgesRepository
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class MainScreenViewModel @Inject constructor(
-    private val fridgeProductsRepository: FridgeProductsRepository
+@HiltViewModel(assistedFactory = FridgeContentViewModel.Factory::class)
+class FridgeContentViewModel @AssistedInject constructor(
+    private val fridgesRepository: FridgesRepository,
+    private val fridgeProductsRepository: FridgeProductsRepository,
+    @Assisted private val fridgeId: Int
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(MainScreenState())
+    private val _state = MutableStateFlow(FridgeContentState())
     val state = _state.asStateFlow()
 
     init {
+        fetchFridgeName()
         fetchFridgeProducts()
     }
 
@@ -59,20 +64,31 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
+    private fun fetchFridgeName() {
+        viewModelScope.launch {
+            when (val result = fridgesRepository.getFridge(fridgeId)) {
+                is Result.Error -> {
+                    _state.value = _state.value.copy(
+                        isLoading = false,
+                        error = "При загрузке данных что-то пошло не так"
+                    )
+                }
+
+                is Result.Success -> {
+                    _state.update { it.copy(fridgeName = result.data.name) }
+                }
+            }
+        }
+    }
+
     fun fetchFridgeProducts() {
         viewModelScope.launch {
             _state.value = _state.value.copy(
                 isLoading = true
             )
 
-            val response = fridgeProductsRepository.getFridgeProducts(FridgeProductsFilters())
-//            val response = Result.Success(
-//                FridgeProductsResponse(
-//                    totalItems = 0,
-//                    totalPages = 0,
-//                    items = fridgeProductsListStub()
-//                )
-//            )
+            val response =
+                fridgeProductsRepository.getFridgeProducts(FridgeProductsFilters(fridgeId = fridgeId))
             when (response) {
                 is Result.Success -> {
                     _state.value = _state.value.copy(
@@ -98,12 +114,25 @@ class MainScreenViewModel @Inject constructor(
             FilterType.EXPIRY -> this.sortedBy { it.daysLeft }
         }
     }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(fridgeId: Int): FridgeContentViewModel
+    }
 }
 
-data class MainScreenState(
+data class FridgeContentState(
+    val fridgeName: String = "Загрузка...",
     val items: List<FridgeProductUi> = emptyList(),
     val productNameFilter: String = "",
     val filterType: FilterType = FilterType.NAME,
     val isLoading: Boolean = false,
     val error: String? = null
 )
+
+enum class FilterType(val displayName: String) {
+    NAME("Название"),
+    EXPIRY("Срок годности");
+
+    override fun toString() = displayName
+}

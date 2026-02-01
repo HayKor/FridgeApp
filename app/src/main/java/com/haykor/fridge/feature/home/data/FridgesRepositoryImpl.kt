@@ -11,17 +11,18 @@ class FridgesRepositoryImpl @Inject constructor(
 ) : FridgesRepository {
 
     override suspend fun getFridges(): Result<List<FridgesDto>> {
-        val response = fridgesService.getFridges()
-        return response
+        return fridgesService.getFridges()
+    }
+
+    override suspend fun getFridge(fridgeId: Int): Result<FridgesDto> {
+        return fridgesService.getFridge(fridgeId)
     }
 
     override suspend fun createFridge(fridge: CreateFridgeRequest): Result<FridgesDto> {
-        val response = fridgesService.createFridge(fridge)
-        return response
+        return fridgesService.createFridge(fridge)
     }
 
     override suspend fun deleteFridge(fridgeId: Int): Result<Unit> {
-        val response = fridgesService.deleteFridge(fridgeId)
-        return response
+        return fridgesService.deleteFridge(fridgeId)
     }
 }

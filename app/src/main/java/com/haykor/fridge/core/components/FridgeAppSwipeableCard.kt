@@ -1,6 +1,7 @@
 package com.haykor.fridge.core.components
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
@@ -17,12 +18,18 @@ import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
@@ -40,6 +47,11 @@ fun FridgeAppSwipeableCard(
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit,
 ) {
+    var isPressed by remember { mutableStateOf(false) }
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) 0.96f else 1f
+    )
+
     val density = LocalDensity.current
     val scope = rememberCoroutineScope()
 
@@ -51,6 +63,7 @@ fun FridgeAppSwipeableCard(
         Box(
             modifier = Modifier
                 .matchParentSize()
+                .graphicsLayer(scaleX = scale, scaleY = scale)
                 .clip(MaterialTheme.shapes.medium)
                 .background(backgroundColor)
         ) {
@@ -65,7 +78,19 @@ fun FridgeAppSwipeableCard(
         Card(
             colors = colors,
             modifier = Modifier
+                .graphicsLayer(scaleX = scale, scaleY = scale)
                 .offset { IntOffset(offsetX.value.roundToInt(), 0) }
+                .pointerInput(Unit) {
+                    awaitPointerEventScope {
+                        while (true) {
+                            val event = awaitPointerEvent()
+                            when (event.type) {
+                                PointerEventType.Press -> isPressed = true
+                                PointerEventType.Release -> isPressed = false
+                            }
+                        }
+                    }
+                }
                 .draggable(
                     orientation = Orientation.Horizontal,
                     state = rememberDraggableState { delta ->

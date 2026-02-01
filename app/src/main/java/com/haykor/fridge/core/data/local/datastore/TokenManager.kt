@@ -26,9 +26,9 @@ class TokenManager @Inject constructor(
 
     suspend fun saveTokens(authResponse: AuthResponse) {
         val accessTokenExpiryTime =
-            System.currentTimeMillis() + (authResponse.accessTokenExpiresIn * 60 * 1000L)
+            System.currentTimeMillis() + (authResponse.accessTokenExpiresIn * 60L * 1000L)
         val refreshTokenExpiryTime =
-            System.currentTimeMillis() + (authResponse.refreshTokenExpiresIn * 24 * 60 * 60 * 1000L)
+            System.currentTimeMillis() + (authResponse.refreshTokenExpiresIn.toLong() * 24L * 60L * 60L * 1000L)
 
         dataStore.edit { preferences ->
             preferences[ACCESS_TOKEN] = authResponse.accessToken
@@ -54,7 +54,7 @@ class TokenManager @Inject constructor(
 
     suspend fun isRefreshTokenExpired(): Boolean {
         val expiry =
-            dataStore.data.map { it[REFRESH_TOKEN_EXPIRY] ?: 0L }.first() // FIXME: doesn't work idk
+            dataStore.data.map { it[REFRESH_TOKEN_EXPIRY] ?: 0L }.first()
         Log.d("tokens", "expiryRefresh=$expiry currentTime=${System.currentTimeMillis()}")
         return System.currentTimeMillis() >= expiry
     }
