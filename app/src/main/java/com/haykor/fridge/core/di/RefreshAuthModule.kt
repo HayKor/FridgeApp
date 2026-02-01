@@ -3,6 +3,7 @@ package com.haykor.fridge.core.di
 import com.haykor.fridge.BuildConfig
 import com.haykor.fridge.core.data.remote.adapters.ResultCallAdapterFactory
 import com.haykor.fridge.core.data.remote.api.RefreshTokensService
+import com.haykor.fridge.core.data.remote.interceptors.UserAgentInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -54,7 +55,11 @@ object RefreshAuthModule {
     @Provides
     @Singleton
     @ForRefreshAuth
-    fun provideOkHttpClient(): OkHttpClient {
-        return OkHttpClient.Builder().build()
+    fun provideOkHttpClient(
+        userAgentInterceptor: UserAgentInterceptor
+    ): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor(userAgentInterceptor)
+            .build()
     }
 }
