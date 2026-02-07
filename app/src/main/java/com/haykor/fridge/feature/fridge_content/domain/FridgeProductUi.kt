@@ -24,7 +24,7 @@ data class FridgeProductUi(
 fun FridgeProductDto.toUi(): FridgeProductUi {
     val expiryDate = product.manufacturedAt + product.productType.expPeriod
     val currentDate = Clock.System.now()
-    // TODO: ceil it idk
+    // TODO: ceil it idk // idk what I meant by 'ceil'
     val daysLeft = expiryDate - currentDate
 
     return FridgeProductUi(
@@ -40,7 +40,7 @@ fun FridgeProductDto.toUi(): FridgeProductUi {
 }
 
 @OptIn(ExperimentalTime::class)
-private fun Instant.toFormattedString(): String {
+fun Instant.toFormattedString(): String {
     return this.format(DateTimeComponents.Format {
         day()
         chars(".")
