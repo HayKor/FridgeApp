@@ -12,19 +12,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.haykor.fridge.core.data.remote.models.AccountType
-import com.haykor.fridge.core.data.remote.models.FridgeProductDto
-import com.haykor.fridge.core.data.remote.models.ProductDto
-import com.haykor.fridge.core.data.remote.models.ProductTypeDto
 import com.haykor.fridge.core.theme.FridgeAppTheme
-import com.haykor.fridge.feature.fridge_content.domain.FridgeProductUi
-import com.haykor.fridge.feature.fridge_content.domain.toUi
+import com.haykor.fridge.feature.fridge_content.domain.FridgeProduct
 import com.haykor.fridge.feature.fridge_content.presentation.FridgeContentLayout
+import com.haykor.fridge.feature.fridge_content.presentation.FridgeProductUi
 import com.haykor.fridge.feature.fridge_content.presentation.screens.FilterType
+import com.haykor.fridge.feature.fridge_content.presentation.toUi
 import kotlin.time.Clock
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
 import kotlin.time.ExperimentalTime
-import kotlin.time.Instant
 
 @Composable
 fun MainScreen(
@@ -85,7 +82,7 @@ private fun FridgeScreenPreview() {
             containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         ) {
             MainScreen(
-                items = fridgeProductsListStub().map(FridgeProductDto::toUi),
+                items = fridgeProductsListStub().map { it.toUi("My fridge #1") },
                 onProductNameFilterChange = { },
                 isLoading = false,
                 productNameFilter = "",
@@ -102,64 +99,38 @@ private fun FridgeScreenPreview() {
 
 @OptIn(ExperimentalTime::class)
 internal fun fridgeProductsListStub() = listOf(
-    FridgeProductDto(
+    FridgeProduct(
         id = 2,
         fridgeId = 1,
-        createdAt = Instant.parse("2025-01-07T12:00:00Z"),
-        deletedAt = Instant.parse("2025-01-07T12:00:00Z"),
-        product = ProductDto(
-            id = 1,
-            amount = 1,
-            manufacturedAt = Clock.System.now() - 1.days,
-            productType = ProductTypeDto(
-                id = 1,
-                name = "Молоко",
-                slug = "Молочные продукты",
-                accountType = AccountType.VOLUME,
-                calories = 100,
-                expPeriod = Duration.parse("P3D")
-            ),
-        ),
+        amount = 1,
+        manufacturedAt = Clock.System.now() - 1.days,
+        name = "Молоко",
+        slug = "Молочные продукты",
+        accountType = AccountType.VOLUME,
+        calories = 100,
+        expPeriod = Duration.parse("P3D")
     ),
-
-    FridgeProductDto(
+    FridgeProduct(
         id = 1,
         fridgeId = 1,
-        createdAt = Instant.parse("2025-01-07T12:00:00Z"),
-        deletedAt = Instant.parse("2025-01-07T12:00:00Z"),
-        product = ProductDto(
-            id = 1,
-            amount = 1,
-            manufacturedAt = Clock.System.now() + 2.days,
-            productType = ProductTypeDto(
-                id = 1,
-                name = "Молоко",
-                slug = "Молочные продукты",
-                accountType = AccountType.VOLUME,
-                calories = 100,
-                expPeriod = Duration.parse("P3D")
-            ),
-        ),
+        amount = 1,
+        manufacturedAt = Clock.System.now() + 2.days,
+        name = "Молоко",
+        slug = "Молочные продукты",
+        accountType = AccountType.VOLUME,
+        calories = 100,
+        expPeriod = Duration.parse("P3D")
     ),
 
-    FridgeProductDto(
+    FridgeProduct(
         id = 3,
         fridgeId = 1,
-        createdAt = Instant.parse("2025-01-07T12:00:00Z"),
-        deletedAt = Instant.parse("2025-01-07T12:00:00Z"),
-        product = ProductDto(
-            id = 1,
-            amount = 1,
-            manufacturedAt = Clock.System.now() - 5.days,
-            productType = ProductTypeDto(
-                id = 1,
-                name = "Хлебушек",
-                slug = "Хлебные изделия",
-                accountType = AccountType.VOLUME,
-                calories = 100,
-                expPeriod = Duration.parse("P3D")
-            ),
-        ),
+        amount = 1,
+        manufacturedAt = Clock.System.now() - 5.days,
+        name = "Хлебушек",
+        slug = "Хлебные изделия",
+        accountType = AccountType.VOLUME,
+        calories = 100,
+        expPeriod = Duration.parse("P3D")
     )
 )
-

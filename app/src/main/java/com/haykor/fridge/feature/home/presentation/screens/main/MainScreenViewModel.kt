@@ -5,9 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.haykor.fridge.core.data.remote.models.FridgeProductsFilters
 import com.haykor.fridge.core.data.remote.models.Result
 import com.haykor.fridge.feature.fridge_content.data.FridgeProductsRepository
-import com.haykor.fridge.feature.fridge_content.domain.FridgeProductUi
-import com.haykor.fridge.feature.fridge_content.domain.toUi
+import com.haykor.fridge.feature.fridge_content.presentation.FridgeProductUi
 import com.haykor.fridge.feature.fridge_content.presentation.screens.FilterType
+import com.haykor.fridge.feature.fridge_content.presentation.toUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -76,7 +76,7 @@ class MainScreenViewModel @Inject constructor(
             when (response) {
                 is Result.Success -> {
                     _state.value = _state.value.copy(
-                        items = response.data.items.map { it.toUi() }
+                        items = response.data.map { it.toUi("Dummy fridge name") } // FIX: fridge names
                             .sortFridgeProducts(_state.value.filterType),
                         isLoading = false
                     )
