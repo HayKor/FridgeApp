@@ -1,5 +1,7 @@
 package com.haykor.fridge.feature.fridge_content.presentation
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.content.res.Configuration.UI_MODE_TYPE_NORMAL
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,6 +28,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,15 +38,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.haykor.fridge.core.components.FridgeAppSwipeableCard
 import com.haykor.fridge.core.components.FridgeAppTextField
-import com.haykor.fridge.core.data.remote.models.FridgeProductDto
 import com.haykor.fridge.core.theme.FridgeAppTheme
-import com.haykor.fridge.feature.fridge_content.domain.FridgeProductUi
-import com.haykor.fridge.feature.fridge_content.domain.toMark
-import com.haykor.fridge.feature.fridge_content.domain.toUi
 import com.haykor.fridge.feature.fridge_content.presentation.screens.FilterType
 import com.haykor.fridge.feature.home.presentation.screens.main.fridgeProductsListStub
 import kotlin.time.ExperimentalTime
@@ -212,41 +212,67 @@ private fun FridgeProductCard(
 
     FridgeAppSwipeableCard(
         onItemDelete = onItemDelete,
-        colors = CardDefaults.cardColors(
-            containerColor = statusColor
-        ),
-        modifier = modifier
+//        colors = CardDefaults.cardColors(
+//            containerColor = statusColor
+//        ),
+        modifier = modifier.padding(2.dp)
     ) {
-        Column(
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth()
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = item.name,
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = "Тип: ${item.slug}",
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                text = "Дата изготовления: ${item.manufacturedAt}",
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                text = "Количество: ${item.amount} ${item.accountType.toMark()}",
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                text = "Калории: ${item.calories}",
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                text = "Осталось: ${item.daysLeft} дней",
-                style = MaterialTheme.typography.bodyLarge,
-            )
+            Surface(
+                color = statusColor,
+                shape = CardDefaults.shape
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(8.dp)
+
+                ) {
+                    Text(
+                        text = item.name,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = "Тип: ${item.slug}",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Text(
+                        text = "Дата изготовления: ${item.manufacturedAt}",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Text(
+                        text = "Количество: ${item.amount} ${item.accountType.toMark()}",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Text(
+                        text = "Калории: ${item.calories}",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Text(
+                        text = "Осталось: ${item.daysLeft} дней",
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                }
+            }
+            Surface(
+                color = statusColor,
+                shape = CardDefaults.shape,
+                modifier = Modifier
+                    .padding(8.dp)
+            ) {
+                Text(
+                    text = item.fridgeName ?: "неизвестный",
+                    style = MaterialTheme.typography.bodyMedium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.padding(2.dp)
+                )
+            }
         }
     }
 }
@@ -254,8 +280,10 @@ private fun FridgeProductCard(
 @OptIn(ExperimentalTime::class)
 @Preview(
     device = "spec:parent=pixel_6,navigation=buttons",
+    uiMode = UI_MODE_NIGHT_YES or UI_MODE_TYPE_NORMAL,
     showSystemUi = true
 )
+//@PreviewLightDark
 @Composable
 private fun FridgeScreenPreview() {
     FridgeAppTheme {
@@ -265,7 +293,7 @@ private fun FridgeScreenPreview() {
         ) {
             FridgeContentLayout(
                 header = "Продукты в холодильнике",
-                items = fridgeProductsListStub().map(FridgeProductDto::toUi),
+                items = fridgeProductsListStub().map { it.toUi("My fridge #1") },
                 onProductNameFilterChange = { },
                 isLoading = false,
                 productNameFilter = "",
