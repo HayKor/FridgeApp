@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -41,10 +42,10 @@ import kotlin.math.roundToInt
 @Composable
 fun FridgeAppSwipeableCard(
     onItemDelete: () -> Unit,
-    colors: CardColors,
+    modifier: Modifier = Modifier,
+    colors: CardColors = CardDefaults.cardColors(),
     backgroundColor: Color = Color.Red,
     dismissThreshold: Dp = 100.dp,
-    modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     var isPressed by remember { mutableStateOf(false) }
